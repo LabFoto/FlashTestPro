@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-02-13T14:00:11.518696",
+  "error": "KeyboardInterrupt: ",
+  "system": "Windows",
+  "release": "11",
+  "version": "10.0.26200",
+  "machine": "AMD64",
+  "processor": "Intel64 Family 6 Model 151 Stepping 5, GenuineIntel",
+  "python_version": "3.14.2",
+  "python_compiler": "MSC v.1944 64 bit (AMD64)",
+  "argv": [
+    "main.py"
+  ],
+  "modules": {
+    "re": "2.2.1",
+    "logging": "0.5.1.2",
+    "platform": "1.0.9",
+    "json": "2.0.9",
+    "tkinter.ttk": "0.3.1",
+    "zlib": "1.0",
+    "psutil": "7.2.2",
+    "_ctypes": "1.1.0",
+    "ctypes": "1.1.0",
+    "packaging": "26.0",
+    "numpy.version": "2.4.2",
+    "numpy._core._multiarray_umath": "3.1",
+    "numpy._core": "2.4.2",
+    "numpy.linalg._umath_linalg": "0.1.5",
+    "numpy": "2.4.2",
+    "PIL._version": "12.1.0",
+    "PIL": "12.1.0",
+    "PIL._deprecate": "12.1.0",
+    "PIL.Image": "12.1.0",
+    "argparse": "1.1",
+    "pyparsing": "3.3.2",
+    "cycler": "0.12.1",
+    "dateutil._version": "2.9.0.post0",
+    "dateutil": "2.9.0.post0",
+    "kiwisolver._cext": "1.4.9",
+    "kiwisolver": "1.4.9",
+    "matplotlib": "3.10.8",
+    "ipaddress": "1.0",
+    "_decimal": "1.70",
+    "decimal": "1.70",
+    "six": "1.17.0",
+    "tkinter.font": "0.9"
+  },
+  "traceback": "NoneType: None\n",
+  "error_stats": {
+    "total_errors": 97355,
+    "total_warnings": 4,
+    "errors_by_type": {
+      "KeyError": 1,
+      "Unknown": 97352,
+      "KeyboardInterrupt": 2
+    },
+    "errors_by_module": {
+      "main": 97355
+    }
+  }
+}

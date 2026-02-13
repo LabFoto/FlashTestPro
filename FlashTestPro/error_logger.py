@@ -56,8 +56,8 @@ class ErrorLogger:
         self.error_stats = {
             'total_errors': 0,
             'total_warnings': 0,
-            'errors_by_type': {},  # Инициализируем пустым словарем
-            'errors_by_module': {}  # Инициализируем пустым словарем
+            'errors_by_type': {},
+            'errors_by_module': {}
         }
 
         # Загружаем статистику
@@ -120,13 +120,16 @@ class ErrorLogger:
     def log_error(self, message, exc_info=True, module="main"):
         """Логирование ошибки"""
         self.logger.error(message, exc_info=exc_info)
-
+        
         # Получаем тип ошибки
         error_type = "Unknown"
-        if exc_info:
-            exc_type, exc_value, _ = sys.exc_info()
+        if exc_info and isinstance(exc_info, tuple) and len(exc_info) == 3:
+            exc_type, exc_value, _ = exc_info
             if exc_type:
                 error_type = exc_type.__name__
+        elif exc_info and not isinstance(exc_info, bool):
+            exc_type = type(exc_info)
+            error_type = exc_type.__name__
 
         self._update_stats(error_type, module)
 
@@ -280,6 +283,7 @@ class ErrorLogger:
                         except:
                             pass
 
+
 # Глобальный экземпляр логгера
 _error_logger = None
 
@@ -289,6 +293,38 @@ def get_logger():
     if _error_logger is None:
         _error_logger = ErrorLogger()
     return _error_logger
+
+def global_exception_handler(exc_type, exc_value, exc_traceback):
+    """Глобальный обработчик необработанных исключений"""
+    try:
+        error_logger = get_logger()
+        
+        # Логируем критическую ошибку
+        error_logger.log_error(
+            f"Необработанное исключение: {exc_type.__name__}: {exc_value}",
+            exc_info=(exc_type, exc_value, exc_traceback)
+        )
+
+        # Создаем crash report
+        crash_file = error_logger.create_crash_report(f"{exc_type.__name__}: {exc_value}")
+
+        # Показываем сообщение пользователю
+        try:
+            import tkinter.messagebox as tkmb
+            error_msg = f"Произошла критическая ошибка:\n\n{exc_type.__name__}: {exc_value}\n\n"
+            if crash_file:
+                error_msg += f"Отчет сохранен в:\n{crash_file}"
+            else:
+                error_msg += "Не удалось сохранить отчет об ошибке."
+
+            tkmb.showerror("Критическая ошибка", error_msg)
+        except:
+            print(f"Критическая ошибка: {exc_type.__name__}: {exc_value}")
+            if crash_file:
+                print(f"Отчет сохранен: {crash_file}")
+    except:
+        # Если даже обработчик исключений падает, используем стандартный
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
 
 # Декоратор для логирования ошибок в функциях
 def log_errors(func):
