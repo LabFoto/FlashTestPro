@@ -1,0 +1,51 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety pylint mypy
+    
+    - name: Run bandit (security)
+      run: |
+        bandit -r . -f html -o bandit-report.html || true
+    
+    - name: Run safety (dependency check)
+      run: |
+        safety check -r requirements.txt --output html > safety-report.html || true
+    
+    - name: Run pylint
+      run: |
+        pylint main.py --output-format=html:pylint-report.html,colorized || true
+    
+    - name: Run mypy (type checking)
+      run: |
+        mypy main.py --html-report mypy-report || true
+    
+    - name: Upload quality reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: quality-reports
+        path: |
+          bandit-report.html
+          safety-report.html
+          pylint-report.html
+          mypy-report/

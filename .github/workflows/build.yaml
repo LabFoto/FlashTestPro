@@ -1,0 +1,136 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build Windows executable
+      run: |
+        .\build_windows.bat
+    
+    - name: Upload Windows build
+      uses: actions/upload-artifact@v4
+      with:
+        name: SD-Card-Tester-Pro-Windows
+        path: dist/SD_Card_Tester_Pro.exe
+    
+  build-linux:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-tk python3-dev
+        sudo apt-get install -y dpkg-dev debhelper
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Build Linux package
+      run: |
+        chmod +x build_linux.sh
+        ./build_linux.sh
+    
+    - name: Upload Linux build
+      uses: actions/upload-artifact@v4
+      with:
+        name: SD-Card-Tester-Pro-Linux
+        path: sd-card-tester-pro.deb
+    
+  build-macos:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Build macOS app
+      run: |
+        chmod +x build_macos.sh
+        ./build_macos.sh
+    
+    - name: Upload macOS build
+      uses: actions/upload-artifact@v4
+      with:
+        name: SD-Card-Tester-Pro-macOS
+        path: dist/SD_Card_Tester_Pro.app
+    
+  create-release:
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          SD-Card-Tester-Pro-Windows/SD_Card_Tester_Pro.exe
+          SD-Card-Tester-Pro-Linux/sd-card-tester-pro.deb
+          SD-Card-Tester-Pro-macOS/SD_Card_Tester_Pro.app
+        body: |
+          ## SD Card Tester Pro ${{ github.ref_name }}
+          
+          ### Что нового:
+          - Автоматическая сборка через GitHub Actions
+          - Улучшена стабильность
+          - Исправлены известные ошибки
+          
+          ### Скачать:
+          - **Windows**: SD_Card_Tester_Pro.exe
+          - **Linux**: sd-card-tester-pro.deb
+          - **macOS**: SD_Card_Tester_Pro.app
+          
+          ### Установка:
+          ```bash
+          # Windows: Просто запустите .exe файл
+          # Linux: sudo dpkg -i sd-card-tester-pro.deb
+          # macOS: Откройте .app файл
+          ```
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,10 @@
+{
+  "total_errors": 1,
+  "total_warnings": 0,
+  "errors_by_type": {
+    "KeyError": 1
+  },
+  "errors_by_module": {
+    "main": 1
+  }
+}

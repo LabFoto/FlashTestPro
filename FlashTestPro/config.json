@@ -1,0 +1,23 @@
+{
+    "app": {
+        "name": "SD Card Tester Pro",
+        "version": "1.0.0",
+        "auto_save_log": false,
+        "auto_update_stats": true
+    },
+    "testing": {
+        "default_passes": 1,
+        "chunk_size_mb": 1024,
+        "test_patterns": [],
+        "verify_read": false,
+        "auto_format": false,
+        "default_filesystem": "FAT32"
+    },
+    "ui": {
+        "theme": "dark",
+        "language": "ru",
+        "chart_points": 100,
+        "font_size": 9,
+        "show_warnings": true
+    }
+}
