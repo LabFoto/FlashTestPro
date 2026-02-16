@@ -1,5 +1,17 @@
-# SD Card Tester Pro
+## 🌐 Язык / Language / 语言
+
+| 🌐 Язык / Language / 语言 | 🔗 Ссылка / Link / 链接 |
+|---------------------------|------------------------|
+| 🇷🇺 Русский | [Перейти](#russian) |
+| 🇬🇧 English | [Go to](#english) |
+| 🇨🇳 中文 | [转到](#chinese) |
+
+---
+
+<a name="russian"></a>
 # == RU ==
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+
 Профессиональное приложение для тестирования и форматирования карт памяти с 
 графическим интерфейсом.
 ## ⚠️ Используя данное ПО все риски вы принимаете на себя, скачивая и устанавливая его вы подтверждаете принятие рисков и последствий использования данного ПО ⚠️
@@ -512,8 +524,11 @@ flatpak install flathub com.sdcardtester.pro
 при простоте синтаксиса Python.
 
 ================================================================================
-# SD Card Tester Pro
+
+<a name="chinese"></a>
 # == 中文 ==
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+
 一款用于测试和格式化存储卡的专业应用程序，具有图形界面。
 
 ## ⚠️ 使用本软件即表示您承担所有风险，下载和安装即表示您确认接受使用本软件的风险和后果。⚠️
@@ -1018,8 +1033,11 @@ flatpak install flathub com.sdcardtester.pro
 同时具有 Python 语法的简洁性。
 
 ================================================================================
-# SD Card Tester Pro
+
+<a name="english"></a>
 # == EN ==
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+
 A professional application for testing and formatting memory cards with
 a graphical interface.
 ## ⚠️ By using this Software, you assume all risks, by downloading and installing it, you confirm acceptance of the risks and consequences of using this software. ⚠️

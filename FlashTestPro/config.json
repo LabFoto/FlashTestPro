@@ -1,23 +1,45 @@
 {
-    "app": {
-        "name": "SD Card Tester Pro",
-        "version": "1.0.0",
-        "auto_save_log": false,
-        "auto_update_stats": true
-    },
-    "testing": {
-        "default_passes": 1,
-        "chunk_size_mb": 1024,
-        "test_patterns": [],
-        "verify_read": false,
-        "auto_format": false,
-        "default_filesystem": "FAT32"
-    },
-    "ui": {
-        "theme": "dark",
-        "language": "ru",
-        "chart_points": 100,
-        "font_size": 9,
-        "show_warnings": true
-    }
+  "app": {
+    "name": "FlashTest Pro",
+    "version": "1.0.0",
+    "auto_save_logs": true,
+    "log_retention_days": 30,
+    "check_updates": true
+  },
+  "ui": {
+    "theme": "dark",
+    "language": "ru",
+    "window_width": 900,
+    "window_height": 700,
+    "min_width": 800,
+    "min_height": 600,
+    "show_tooltips": true
+  },
+  "testing": {
+    "default_passes": 1,
+    "chunk_size_mb": 32,
+    "verify_read": true,
+    "patterns": [
+      "ones",
+      "zeros",
+      "random"
+    ],
+    "bad_sector_threshold": 5,
+    "speed_chart_points": 100
+  },
+  "formatting": {
+    "default_filesystem": "FAT32",
+    "quick_format_default": true,
+    "allow_system_format": false
+  },
+  "wiping": {
+    "default_passes": 3,
+    "verify_after_wipe": true,
+    "methods": [
+      "simple",
+      "dod",
+      "gutmann"
+    ],
+    "default_method": "dod"
+  }
 }

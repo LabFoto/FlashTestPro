@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
 """
-SD Card Tester Pro - Точка входа
+FlashTest Pro - Точка входа в приложение
 """
 import sys
-from error_logger import get_logger
-from error_logger import global_exception_handler
+import os
 
-# Устанавливаем глобальный обработчик исключений
-sys.excepthook = global_exception_handler
+# Добавляем путь к модулям проекта
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from app import FlashTestProApp
+from utils.logger import setup_global_logger, get_logger
 
 def main():
-    """Основная функция запуска"""
+    """Главная функция запуска"""
+    # Настройка глобального логирования
+    logger = setup_global_logger()
+    
     try:
-        from main_app import SDCardTesterApp
-        app = SDCardTesterApp()
+        # Создание и запуск приложения
+        app = FlashTestProApp()
         app.run()
-    except ImportError as e:
-        logger = get_logger()
-        logger.log_error(f"Ошибка импорта модулей: {e}")
-        print(f"Ошибка: Не удалось загрузить модули приложения. {e}")
-        print("Убедитесь, что все файлы находятся в правильных директориях.")
-        sys.exit(1)
     except Exception as e:
-        logger = get_logger()
-        logger.log_exception(e, module="main")
+        logger.critical(f"Критическая ошибка при запуске: {e}", exc_info=True)
         sys.exit(1)
 
 if __name__ == "__main__":
