@@ -1,5 +1,6 @@
 ## 🌐 Язык / Language / 语言
 
+
 | 🌐 Язык / Language / 语言 | 🔗 Ссылка / Link / 链接 |
 |---------------------------|------------------------|
 | 🇷🇺 Русский | [Перейти](#russian) |
@@ -10,7 +11,7 @@
 
 <a name="russian"></a>
 # == RU ==
-# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> FlashTest Pro
 
 Профессиональное приложение для тестирования и форматирования карт памяти с 
 графическим интерфейсом.
@@ -452,7 +453,7 @@ flatpak install flathub com.sdcardtester.pro
 ```json
 {
   "app": {
-    "name": "SD Card Tester Pro",
+    "name": "FlashTest Pro",
     "version": "1.0.0",
     "auto_save_log": false,
     "auto_update_stats": true
@@ -527,7 +528,7 @@ flatpak install flathub com.sdcardtester.pro
 
 <a name="chinese"></a>
 # == 中文 ==
-# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SFlashTest Pro
 
 一款用于测试和格式化存储卡的专业应用程序，具有图形界面。
 
@@ -961,7 +962,7 @@ flatpak install flathub com.sdcardtester.pro
 ```json
 {
   "app": {
-    "name": "SD Card Tester Pro",
+    "name": "FlashTest Pro",
     "version": "1.0.0",
     "auto_save_log": false,
     "auto_update_stats": true
@@ -1036,7 +1037,7 @@ flatpak install flathub com.sdcardtester.pro
 
 <a name="english"></a>
 # == EN ==
-# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> SD Card Tester Pro
+# <img height="64" src="D:\Git\FlashTestPro\assets\icon.svg" width="64"/> FlashTest Pro
 
 A professional application for testing and formatting memory cards with
 a graphical interface.
@@ -1475,7 +1476,7 @@ Configuration file (config.json)
 ```json
 {
   "app": {
-    "name": "SD Card Tester Pro",
+    "name": "FlashTest Pro",
     "version": "1.0.0",
     "auto_save_log": false,
     "auto_update_stats": true

@@ -8,6 +8,8 @@ matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import platform
 
 class SpeedChart(ttk.Frame):
     """Виджет графика скорости"""
@@ -19,12 +21,48 @@ class SpeedChart(ttk.Frame):
         self.speed_data = []
         self.time_data = []
         
+        # Настройка шрифтов для matplotlib
+        self._setup_matplotlib_fonts()
+        
         self._create_chart()
     
+    def _setup_matplotlib_fonts(self):
+        """Настройка шрифтов для matplotlib для поддержки разных языков"""
+        system = platform.system()
+        
+        # Список шрифтов для разных ОС
+        if system == "Windows":
+            # Windows шрифты
+            font_list = ['Segoe UI', 'Microsoft YaHei', 'SimHei', 'Arial Unicode MS', 'DejaVu Sans']
+        elif system == "Linux":
+            # Linux шрифты
+            font_list = ['WenQuanYi Zen Hei', 'Noto Sans CJK SC', 'Noto Sans CJK TC', 'DejaVu Sans']
+        elif system == "Darwin":  # macOS
+            font_list = ['PingFang SC', 'Heiti SC', 'Arial Unicode MS', 'DejaVu Sans']
+        else:
+            font_list = ['DejaVu Sans']
+        
+        # Пытаемся найти доступный шрифт
+        available_fonts = [f.name for f in fm.fontManager.ttflist]
+        font_found = False
+        
+        for font in font_list:
+            if font in available_fonts:
+                plt.rcParams['font.family'] = font
+                font_found = True
+                break
+        
+        if not font_found:
+            # Если ничего не найдено, используем шрифт по умолчанию и надеемся на лучшее
+            plt.rcParams['font.family'] = 'DejaVu Sans'
+        
+        # Настройка поддержки Unicode
+        plt.rcParams['axes.unicode_minus'] = False
+    
     def _create_chart(self):
-        """Создание графика"""
-        # Создание фигуры
-        self.figure = Figure(figsize=(5, 3), dpi=100)
+        """Создание графика с уменьшенной высотой"""
+        # Создание фигуры с уменьшенной высотой
+        self.figure = Figure(figsize=(5, 2.5), dpi=100)
         self.ax = self.figure.add_subplot(111)
         
         # Настройка цветов
@@ -76,12 +114,22 @@ class SpeedChart(ttk.Frame):
                 avg_speed = sum(self.speed_data) / len(self.speed_data)
                 self.ax.axhline(y=avg_speed, color='r', linestyle='--', alpha=0.7)
         
-        self.ax.set_xlabel(self.app.i18n.get("time_sec", "Время (с)"))
-        self.ax.set_ylabel(self.app.i18n.get("speed_mbs", "Скорость (MB/s)"))
-        self.ax.set_title(self.app.i18n.get("speed_chart", "График скорости"))
+        # Локализация надписей с проверкой наличия перевода
+        xlabel = self.app.i18n.get("time_sec", "Время (с)")
+        ylabel = self.app.i18n.get("speed_mbs", "Скорость (MB/s)")
+        title = self.app.i18n.get("speed_chart", "График скорости")
+        
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
+        self.ax.set_title(title)
         
         self.ax.grid(True, alpha=0.3)
-        self.canvas.draw()
+        
+        # Подавление предупреждений о шрифтах
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self.canvas.draw()
     
     def clear(self):
         """Очистка графика"""
@@ -92,4 +140,10 @@ class SpeedChart(ttk.Frame):
     def update_theme(self):
         """Обновление темы"""
         self._apply_theme()
+        self._redraw()
+    
+    def update_language(self):
+        """Обновление языка"""
+        # Перенастройка шрифтов при смене языка
+        self._setup_matplotlib_fonts()
         self._redraw()

@@ -16,12 +16,21 @@ class LogViewer(ttk.Frame):
     
     def _create_widgets(self):
         """Создание виджетов"""
+        # Получаем цвета из темы
+        colors = self.app.theme_manager.colors
+        
         # Текстовое поле для лога
         self.text = tk.Text(
             self,
             wrap=tk.WORD,
             font=("Consolas", 9),
-            height=15
+            bg=colors["log_bg"],
+            fg=colors["log_fg"],
+            insertbackground=colors["fg"],
+            selectbackground=colors["select_bg"],
+            selectforeground=colors["select_fg"],
+            relief=tk.FLAT,
+            borderwidth=0
         )
         
         # Скроллбар
@@ -39,12 +48,20 @@ class LogViewer(ttk.Frame):
         """Настройка цветовых тегов"""
         colors = self.app.theme_manager.colors
         
-        self.text.tag_configure("info", foreground=colors["fg"])
-        self.text.tag_configure("success", foreground=colors["success"])
-        self.text.tag_configure("warning", foreground=colors["warning"])
-        self.text.tag_configure("error", foreground=colors["error"])
-        self.text.tag_configure("debug", foreground="#888888")
-        self.text.tag_configure("system", foreground=colors["accent"])
+        # Основные теги для разных типов сообщений
+        self.text.tag_configure("info", foreground=colors["log_info"])
+        self.text.tag_configure("success", foreground=colors["log_success"])
+        self.text.tag_configure("warning", foreground=colors["log_warning"])
+        self.text.tag_configure("error", foreground=colors["log_error"])
+        self.text.tag_configure("debug", foreground=colors["disabled_fg"])
+        self.text.tag_configure("system", foreground=colors["log_system"])
+        
+        # Дополнительные теги для форматирования
+        self.text.tag_configure("bold", font=("Consolas", 9, "bold"))
+        self.text.tag_configure("timestamp", foreground=colors["accent"])
+        
+        # Настройка фона для выделения
+        self.text.tag_configure("highlight", background=colors["select_bg"])
     
     def log(self, message, level="info"):
         """Добавление сообщения в лог"""
@@ -53,11 +70,19 @@ class LogViewer(ttk.Frame):
         # Определяем тег
         tag = level if level in ["info", "success", "warning", "error", "debug", "system"] else "info"
         
-        # Вставляем сообщение
-        self.text.insert(tk.END, f"[{timestamp}] {message}\n", tag)
+        # Вставляем временную метку с отдельным тегом
+        self.text.insert(tk.END, f"[", "timestamp")
+        self.text.insert(tk.END, timestamp, "timestamp bold")
+        self.text.insert(tk.END, f"] ", "timestamp")
+        
+        # Вставляем сообщение с соответствующим тегом
+        self.text.insert(tk.END, f"{message}\n", tag)
         
         # Прокрутка вниз
         self.text.see(tk.END)
+        
+        # Принудительное обновление
+        self.text.update_idletasks()
     
     def clear(self):
         """Очистка лога"""
@@ -69,4 +94,16 @@ class LogViewer(ttk.Frame):
     
     def update_theme(self):
         """Обновление темы"""
+        colors = self.app.theme_manager.colors
+        
+        # Обновление цветов текстового поля
+        self.text.config(
+            bg=colors["log_bg"],
+            fg=colors["log_fg"],
+            insertbackground=colors["fg"],
+            selectbackground=colors["select_bg"],
+            selectforeground=colors["select_fg"]
+        )
+        
+        # Обновление тегов
         self._configure_tags()

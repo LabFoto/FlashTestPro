@@ -40,12 +40,21 @@ class ProgressPanel(ttk.Frame):
         self.bad_label = ttk.Label(bad_frame, text="0")
         self.bad_label.pack(padx=5, pady=5)
         
-        # Информация о времени
+        # Информация о времени (улучшенная видимость)
         time_frame = ttk.LabelFrame(self, text=self.app.i18n.get("time", "Время"))
         time_frame.pack(fill=tk.X, padx=5, pady=5)
         
-        self.time_label = ttk.Label(time_frame, text="00:00:00")
-        self.time_label.pack(padx=5, pady=5)
+        # Создаем фрейм для времени с фоном для лучшей видимости
+        time_display_frame = ttk.Frame(time_frame, relief=tk.SUNKEN, borderwidth=1)
+        time_display_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        self.time_label = ttk.Label(
+            time_display_frame, 
+            text="00:00:00",
+            font=("Consolas", 12, "bold"),  # Увеличенный шрифт
+            anchor=tk.CENTER
+        )
+        self.time_label.pack(fill=tk.X, padx=5, pady=5)
         
         # Детальная информация
         self.detail_label = ttk.Label(self, text="", font=("Segoe UI", 8))
@@ -90,4 +99,19 @@ class ProgressPanel(ttk.Frame):
     
     def update_theme(self):
         """Обновление темы"""
-        pass  # Тема обновляется автоматически через ttk
+        colors = self.app.theme_manager.colors
+        self.time_label.config(foreground=colors.get("accent", "#ffffff"))
+    
+    def update_language(self):
+        """Обновление языка"""
+        # Обновление заголовков фреймов
+        for child in self.winfo_children():
+            if isinstance(child, ttk.LabelFrame):
+                if "progress" in str(child.cget("text")).lower():
+                    child.config(text=self.app.i18n.get("progress", "Прогресс"))
+                elif "speed" in str(child.cget("text")).lower():
+                    child.config(text=self.app.i18n.get("speed", "Скорость"))
+                elif "bad" in str(child.cget("text")).lower():
+                    child.config(text=self.app.i18n.get("bad_sectors", "Битые сектора"))
+                elif "time" in str(child.cget("text")).lower():
+                    child.config(text=self.app.i18n.get("time", "Время"))

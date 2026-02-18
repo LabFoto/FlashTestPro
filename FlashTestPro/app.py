@@ -122,11 +122,17 @@ class FlashTestProApp:
                 self.root.quit()
         else:
             self.root.quit()
-    
+
     def change_language(self, lang_code):
         """Изменение языка интерфейса"""
         self.i18n.set_language(lang_code)
         self.config_manager.update_config("ui", "language", lang_code)
+
+        # Обновляем шрифт для текущего языка
+        new_font = self.theme_manager.get_font_for_language(lang_code)
+        self.root.option_add("*Font", new_font)
+        self.root.option_add("*Menu.font", new_font)
+
         self.main_window.update_ui_language()
     
     def change_theme(self, theme_name):

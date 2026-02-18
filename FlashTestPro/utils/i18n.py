@@ -30,15 +30,32 @@ class I18n:
         if os.path.exists(lang_file) and self.language != "ru":
             with open(lang_file, 'r', encoding='utf-8') as f:
                 user_translations = json.load(f)
-                self.translations.update(user_translations)
+                # Рекурсивное обновление словаря
+                self._deep_update(self.translations, user_translations)
+        
+        self.logger.debug(f"Загружены переводы для языка: {self.language}")
+    
+    def _deep_update(self, base_dict: Dict, update_dict: Dict):
+        """Рекурсивное обновление словаря"""
+        for key, value in update_dict.items():
+            if key in base_dict and isinstance(base_dict[key], dict) and isinstance(value, dict):
+                self._deep_update(base_dict[key], value)
+            else:
+                base_dict[key] = value
     
     def get(self, key: str, default: str = "") -> str:
         """Получение перевода по ключу"""
         if key in self.translations:
             return self.translations[key]
-        return default or key
+        
+        # Если ключ не найден, логируем и возвращаем default или ключ
+        if default:
+            return default
+        return key
     
     def set_language(self, language: str):
         """Смена языка"""
-        self.language = language
-        self._load_translations()
+        if language != self.language:
+            self.language = language
+            self._load_translations()
+            self.logger.info(f"Язык изменен на: {language}")

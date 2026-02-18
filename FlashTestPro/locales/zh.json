@@ -17,13 +17,32 @@
   "status": "状态",
   
   "test_settings": "测试设置",
+  "performance_settings": "⚡ 性能设置",
   "passes": "次数:",
+  "test_mode": "模式:",
+  "mode_free": "仅可用空间",
+  "mode_full": "完整测试 (所有扇区)",
   "patterns": "模式:",
   "pattern_ones": "全1 (0xFF)",
   "pattern_zeros": "全0 (0x00)",
   "pattern_random": "随机",
+  "select_all": "全部",
   "verify_read": "读取验证",
   "auto_format": "测试后格式化",
+  
+  "chunk_size": "块大小 (MB):",
+  "chunk_tooltip": "每次操作的数据块大小:\n\n• 较小 (1-16 MB) - 精度更高，速度较慢\n• 较大 (64-256 MB) - 速度更快，错误定位精度较低\n\n建议:\n• 对于 HDD: 32-64 MB\n• 对于 SSD: 64-128 MB\n• 对于 闪存: 16-32 MB\n\n块大小影响:\n- 测试速度\n- 坏扇区检测精度\n- 系统负载",
+  
+  "adaptive_chunk": "🔄 自适应块大小",
+  "adaptive_tooltip": "自适应块大小自动优化测试:\n\n• 高速时自动增大块大小以加速\n• 出现错误时减小块大小以精确定位\n• 实时分析磁盘性能\n• 优化速度/精度比\n\n建议用于未知驱动器",
+  
+  "parallel_test": "⚡ 并行测试",
+  "parallel_tooltip": "并行测试使用多个线程:\n\n• 将磁盘分成独立区域\n• 在不同线程中同时测试区域\n• 在多核处理器上提速 2-8 倍\n• 自动负载平衡\n\n⚠️ 可能增加系统负载\n✓ 建议用于 SSD 和快速驱动器",
+  
+  "threads": "线程数:",
+  
+  "quick_test": "⚡ 快速测试",
+  "quick_tooltip": "快速测试仅检查关键区域:\n\n• 磁盘开始（引导扇区）\n• 磁盘中间\n• 磁盘结尾\n• 多个随机位置\n\n优点:\n• 只需1-2分钟\n• 识别明显问题\n• 数据安全\n\n限制:\n• 不能替代完整测试\n• 可能错过隐藏缺陷",
   
   "start_test": "🚀 开始测试",
   "pause": "⏸ 暂停",
@@ -94,7 +113,7 @@
   "system_drive_warning": "⚠️ 不能测试系统驱动器！",
   "cannot_test_system": "不能测试系统驱动器！",
   "select_pattern": "请至少选择一种测试模式",
-  "confirm_test": "⚠️ 警告！驱动器 {0} 上的所有数据将被销毁！\n\n测试参数：\n• 次数：{1}\n• 全1：{2}\n• 全0：{3}\n• 随机：{4}\n• 读取验证：{5}\n• 测试后格式化：{6}\n\n确定要继续吗？",
+  "confirm_test": "⚠️ 警告！驱动器 {0} 上的数据可能被销毁！\n\n测试参数：\n• 次数：{1}\n• 全1：{2}\n• 全0：{3}\n• 随机：{4}\n• 块大小：{5} MB\n• 自适应块：{6}\n• 并行测试：{7}\n• 快速测试：{8}\n• 读取验证：{9}\n• 测试后格式化：{10}\n\n确定要继续吗？",
   "confirm_stop": "停止测试？",
   "test_started": "开始测试驱动器 {0}",
   "test_paused": "测试已暂停",
@@ -107,5 +126,13 @@
   
   "admin_warning": "⚠️ 建议以管理员/root身份运行程序以获得完整的磁盘访问权限",
   
-  "about_description": "专业的闪存驱动器测试和维护工具"
+  "about_description": "专业的闪存驱动器测试和维护工具",
+  
+  "progress": "进度",
+  "speed": "速度",
+  "time": "时间",
+  "time_sec": "时间 (秒)",
+  "speed_mbs": "速度 (MB/秒)",
+  "speed_chart": "速度图表",
+  "event_log": "事件日志"
 }

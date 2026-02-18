@@ -1,13 +1,10 @@
 """
 Главное окно приложения с вкладками
-Этот модуль отвечает за создание и управление главным окном программы,
-включая меню, панели инструментов, список дисков и систему вкладок
 """
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 import platform
-import os  # Добавлен импорт для работы с путями файлов
+import os
 
 from ui.tabs.test_tab import TestTab
 from ui.tabs.format_tab import FormatTab
@@ -19,55 +16,42 @@ from utils.logger import get_logger
 
 
 class MainWindow:
-    """
-    Главное окно приложения
-    Отвечает за:
-    - Создание и управление главным меню
-    - Отображение списка доступных дисков
-    - Управление системой вкладок
-    - Отображение строки состояния
-    - Координацию обновлений между компонентами
-    """
+    """Главное окно приложения"""
 
     def __init__(self, app):
         """
         Инициализация главного окна
-        :param app: ссылка на главный объект приложения для доступа к общим ресурсам
+        :param app: ссылка на главный объект приложения
         """
         self.app = app
-        self.logger = get_logger(__name__)  # Логгер для отслеживания событий
+        self.logger = get_logger(__name__)
         self.root = app.root
 
-        # Текущий выбранный диск (None пока ничего не выбрано)
+        # Текущий выбранный диск
         self.selected_drive = None
 
         # Создание всех элементов интерфейса
-        self._create_menu()          # Создание главного меню
-        self._create_main_layout()    # Создание основной компоновки (список дисков + вкладки)
-        self._create_status_bar()     # Создание строки состояния внизу окна
+        self._create_menu()
+        self._create_main_layout()
+        self._create_status_bar()
 
         self.logger.info("Главное окно создано")
 
-    # ==================== СОЗДАНИЕ МЕНЮ ====================
     def _create_menu(self):
-        """
-        Создание главного меню приложения
-        Меню содержит разделы: Файл, Вид, Инструменты, Справка
-        """
+        """Создание главного меню приложения"""
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
 
         # ----- Меню "Файл" -----
-        file_menu = tk.Menu(menubar, tearoff=0)  # tearoff=0 убирает пунктирную линию
+        file_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label=self.app.i18n.get("menu_file", "Файл"), menu=file_menu)
 
-        # Команды меню "Файл"
         file_menu.add_command(
             label=self.app.i18n.get("menu_refresh", "Обновить диски"),
             command=self.app.refresh_drives,
-            accelerator="F5"  # Отображение горячей клавиши
+            accelerator="F5"
         )
-        file_menu.add_separator()  # Разделительная линия
+        file_menu.add_separator()
         file_menu.add_command(
             label=self.app.i18n.get("menu_settings", "Настройки"),
             command=self._open_settings
@@ -146,42 +130,36 @@ class MainWindow:
         # Привязка горячих клавиш
         self.root.bind("<F5>", lambda e: self.app.refresh_drives())
 
-    # ==================== СОЗДАНИЕ ОСНОВНОЙ КОМПОНОВКИ ====================
     def _create_main_layout(self):
-        """
-        Создание основной структуры окна:
-        - Левая панель: список дисков с кнопкой обновления
-        - Правая панель: система вкладок для различных операций
-        """
+        """Создание основной структуры окна"""
         # Главный контейнер с отступами от краев окна
         main_container = ttk.Frame(self.root)
         main_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
         # ===== ЛЕВАЯ ПАНЕЛЬ (СПИСОК ДИСКОВ) =====
-        # Фиксированная ширина 350 пикселей
         left_panel = ttk.Frame(main_container, width=350)
         left_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=False, padx=(0, 10))
-        left_panel.pack_propagate(False)  # Запрещаем изменение размера
+        left_panel.pack_propagate(False)
 
         # Заголовок панели дисков
-        drives_label = ttk.Label(
+        self.drives_label = ttk.Label(
             left_panel,
             text=self.app.i18n.get("available_drives", "Доступные диски"),
-            font=("Segoe UI", 12, "bold")  # Жирный шрифт для заголовка
+            style="Heading.TLabel"
         )
-        drives_label.pack(anchor=tk.W, pady=(0, 5))
+        self.drives_label.pack(anchor=tk.W, pady=(0, 5))
 
-        # Виджет списка дисков (отображает все доступные накопители)
+        # Виджет списка дисков
         self.drive_list = DriveListWidget(left_panel, self.app)
         self.drive_list.pack(fill=tk.BOTH, expand=True)
 
         # Кнопка обновления списка дисков
-        refresh_btn = ttk.Button(
+        self.refresh_btn = ttk.Button(
             left_panel,
             text=self.app.i18n.get("refresh", "🔄 Обновить"),
             command=self.app.refresh_drives
         )
-        refresh_btn.pack(fill=tk.X, pady=(10, 0))
+        self.refresh_btn.pack(fill=tk.X, pady=(10, 0))
 
         # ===== ПРАВАЯ ПАНЕЛЬ (СИСТЕМА ВКЛАДОК) =====
         right_panel = ttk.Frame(main_container)
@@ -192,38 +170,23 @@ class MainWindow:
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
         # Инициализация всех вкладок
-        # Каждая вкладка отвечает за свою функциональность
         self.test_tab = TestTab(self.notebook, self.app)
-        self.notebook.add(self.test_tab, text=self.app.i18n.get(
-            "tab_test", "🔍 Тестирование"
-        ))
+        self.notebook.add(self.test_tab, text=self.app.i18n.get("tab_test", "🔍 Тестирование"))
 
         self.format_tab = FormatTab(self.notebook, self.app)
-        self.notebook.add(self.format_tab, text=self.app.i18n.get(
-            "tab_format", "💾 Форматирование"
-        ))
+        self.notebook.add(self.format_tab, text=self.app.i18n.get("tab_format", "💾 Форматирование"))
 
         self.wipe_tab = WipeTab(self.notebook, self.app)
-        self.notebook.add(self.wipe_tab, text=self.app.i18n.get(
-            "tab_wipe", "🧹 Затирание"
-         ))
+        self.notebook.add(self.wipe_tab, text=self.app.i18n.get("tab_wipe", "🧹 Затирание"))
 
         self.results_tab = ResultsTab(self.notebook, self.app)
-        self.notebook.add(self.results_tab, text=self.app.i18n.get(
-            "tab_results", "📊 Результаты"
-        ))
+        self.notebook.add(self.results_tab, text=self.app.i18n.get("tab_results", "📊 Результаты"))
 
         self.info_tab = InfoTab(self.notebook, self.app)
-        self.notebook.add(self.info_tab, text=self.app.i18n.get(
-            "tab_info", "ℹ️ Информация"
-        ))
+        self.notebook.add(self.info_tab, text=self.app.i18n.get("tab_info", "ℹ️ Информация"))
 
-    # ==================== СОЗДАНИЕ СТРОКИ СОСТОЯНИЯ ====================
     def _create_status_bar(self):
-        """
-        Создание строки состояния внизу окна
-        Отображает текущий статус программы и информацию о выбранном диске
-        """
+        """Создание строки состояния внизу окна"""
         self.status_bar = ttk.Frame(self.root)
         self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
 
@@ -231,8 +194,8 @@ class MainWindow:
         self.status_label = ttk.Label(
             self.status_bar,
             text=self.app.i18n.get("ready", "Готов"),
-            relief=tk.SUNKEN,  # Эффект "утопленности"
-            anchor=tk.W  # Выравнивание по левому краю
+            relief=tk.SUNKEN,
+            anchor=tk.W
         )
         self.status_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
@@ -241,29 +204,21 @@ class MainWindow:
             self.status_bar,
             text="",
             relief=tk.SUNKEN,
-            anchor=tk.E,  # Выравнивание по правому краю
-            width=40  # Фиксированная ширина
+            anchor=tk.E,
+            width=40
         )
         self.drive_info_label.pack(side=tk.RIGHT)
 
-    # ==================== МЕТОДЫ ОБНОВЛЕНИЯ ИНТЕРФЕЙСА ====================
     def update_drive_list(self, drives):
-        """
-        Обновление списка дисков
-        :param drives: список словарей с информацией о дисках
-        """
+        """Обновление списка дисков"""
         self.drive_list.update_drives(drives)
         self.update_status(f"Найдено дисков: {len(drives)}")
 
     def update_selected_drive(self, drive_info):
-        """
-        Обновление информации при выборе диска
-        :param drive_info: словарь с информацией о выбранном диске
-        """
+        """Обновление информации при выборе диска"""
         self.selected_drive = drive_info
 
         if drive_info:
-            # Для системного диска показываем предупреждение
             if drive_info.get('is_system', False):
                 info_text = f"⚠️ СИСТЕМНЫЙ ДИСК: {drive_info['path']}"
                 self.drive_info_label.config(foreground="red")
@@ -284,14 +239,9 @@ class MainWindow:
         return self.selected_drive
 
     def update_status(self, message, message_type="info"):
-        """
-        Обновление текста в строке состояния
-        :param message: текст сообщения
-        :param message_type: тип сообщения (info, warning, error, success)
-        """
+        """Обновление текста в строке состояния"""
         self.status_label.config(text=message)
 
-        # Цветовая индикация в зависимости от типа сообщения
         colors = {
             "info": "",
             "warning": "orange",
@@ -308,7 +258,6 @@ class MainWindow:
         )
         self.update_status(warning_text, "warning")
 
-    # ==================== МЕТОДЫ ОБНОВЛЕНИЯ ЛОКАЛИЗАЦИИ И ТЕМ ====================
     def update_ui_language(self):
         """Обновление языка интерфейса при смене локализации"""
         # Обновление заголовков вкладок
@@ -325,8 +274,16 @@ class MainWindow:
         self.results_tab.update_language()
         self.info_tab.update_language()
 
-        # Обновление меню (пересоздаем для применения новых текстов)
+        # Обновление меню
         self._create_menu()
+        
+        # Обновление заголовка списка дисков
+        if hasattr(self, 'drives_label'):
+            self.drives_label.config(text=self.app.i18n.get("available_drives", "Доступные диски"))
+        
+        # Обновление кнопки обновления
+        if hasattr(self, 'refresh_btn'):
+            self.refresh_btn.config(text=self.app.i18n.get("refresh", "🔄 Обновить"))
 
     def update_theme(self):
         """Обновление темы оформления"""
@@ -339,10 +296,12 @@ class MainWindow:
         self.wipe_tab.update_theme()
         self.results_tab.update_theme()
         self.info_tab.update_theme()
+        
+        # Обновление списка дисков
+        self.drive_list.update_theme()
 
-    # ==================== ОБРАБОТЧИКИ КОМАНД МЕНЮ ====================
     def _open_settings(self):
-        """Открытие окна настроек (заглушка для будущей функциональности)"""
+        """Открытие окна настроек"""
         messagebox.showinfo("Информация", "Окно настроек будет доступно в следующей версии")
 
     def _check_disk_health(self):
@@ -373,23 +332,24 @@ class MainWindow:
         """Отображение журнала ошибок в отдельном окне"""
         from tkinter import scrolledtext
 
-        # Создание нового окна
         error_window = tk.Toplevel(self.root)
         error_window.title(self.app.i18n.get("error_log", "Журнал ошибок"))
         error_window.geometry("700x500")
         error_window.minsize(600, 400)
 
-        # Текстовая область с прокруткой
-        text_area = scrolledtext.ScrolledText(error_window, wrap=tk.WORD)
+        text_area = scrolledtext.ScrolledText(
+            error_window, 
+            wrap=tk.WORD,
+            font=self.app.theme_manager.fixed_font
+        )
         text_area.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # Загрузка содержимого файла с ошибками
         log_path = os.path.join("logs", "error.log")
         if os.path.exists(log_path):
             with open(log_path, 'r', encoding='utf-8') as f:
                 text_area.insert(tk.END, f.read())
 
-        text_area.config(state=tk.DISABLED)  # Запрещаем редактирование
+        text_area.config(state=tk.DISABLED)
 
     def _open_documentation(self):
         """Открытие документации в браузере"""

@@ -17,13 +17,32 @@
   "status": "Status",
   
   "test_settings": "Test Settings",
+  "performance_settings": "⚡ Performance Settings",
   "passes": "Passes:",
+  "test_mode": "Mode:",
+  "mode_free": "Free Space Only",
+  "mode_full": "Full Test (all sectors)",
   "patterns": "Patterns:",
   "pattern_ones": "Ones (0xFF)",
   "pattern_zeros": "Zeros (0x00)",
   "pattern_random": "Random",
+  "select_all": "All",
   "verify_read": "Verify Read",
   "auto_format": "Format After Test",
+  
+  "chunk_size": "Chunk Size (MB):",
+  "chunk_tooltip": "Data block size per operation:\n\n• Smaller (1-16 MB) - higher accuracy, slower\n• Larger (64-256 MB) - higher speed, less error localization\n\nRecommendations:\n• For HDD: 32-64 MB\n• For SSD: 64-128 MB\n• For Flash: 16-32 MB\n\nChunk size affects:\n- Testing speed\n- Bad sector detection accuracy\n- System load",
+  
+  "adaptive_chunk": "🔄 Adaptive Chunk Size",
+  "adaptive_tooltip": "Adaptive chunk size automatically optimizes testing:\n\n• Increases chunk at high speed for faster testing\n• Decreases chunk when errors appear for accurate localization\n• Analyzes disk performance in real time\n• Optimizes speed/accuracy ratio\n\nRecommended for unknown drives",
+  
+  "parallel_test": "⚡ Parallel Testing",
+  "parallel_tooltip": "Parallel testing uses multiple threads:\n\n• Splits disk into independent zones\n• Tests zones simultaneously in different threads\n• 2-8x speedup on multi-core processors\n• Automatic load balancing\n\n⚠️ May increase system load\n✓ Recommended for SSDs and fast drives",
+  
+  "threads": "Threads:",
+  
+  "quick_test": "⚡ Quick Test",
+  "quick_tooltip": "Quick test checks only key areas:\n\n• Beginning of disk (boot sector)\n• Middle of disk\n• End of disk\n• Several random positions\n\nAdvantages:\n• Takes 1-2 minutes\n• Identifies obvious problems\n• Safe for data\n\nLimitations:\n• Does not replace full testing\n• May miss hidden defects",
   
   "start_test": "🚀 Start Test",
   "pause": "⏸ Pause",
@@ -91,10 +110,10 @@
   "confirm": "Confirm",
   
   "select_drive_first": "Please select a drive first",
-  "system_drive_warning": "⚠️ System drives cannot be tested!",
+  "system_drive_warning": "⚠️ Cannot test system drives!",
   "cannot_test_system": "Cannot test system drive!",
   "select_pattern": "Select at least one test pattern",
-  "confirm_test": "⚠️ WARNING! All data on drive {0} will be destroyed!\n\nTest parameters:\n• Passes: {1}\n• Ones: {2}\n• Zeros: {3}\n• Random: {4}\n• Verify read: {5}\n• Format after test: {6}\n\nAre you sure you want to continue?",
+  "confirm_test": "⚠️ WARNING! Data on drive {0} may be destroyed!\n\nTest parameters:\n• Passes: {1}\n• Ones: {2}\n• Zeros: {3}\n• Random: {4}\n• Chunk size: {5} MB\n• Adaptive chunk: {6}\n• Parallel testing: {7}\n• Quick test: {8}\n• Verify read: {9}\n• Format after test: {10}\n\nAre you sure you want to continue?",
   "confirm_stop": "Stop testing?",
   "test_started": "Testing started for drive {0}",
   "test_paused": "Test paused",
@@ -107,5 +126,13 @@
   
   "admin_warning": "⚠️ For full disk access, it is recommended to run the program as administrator/root",
   
-  "about_description": "Professional tool for testing and maintaining flash drives"
+  "about_description": "Professional tool for testing and maintaining flash drives",
+  
+  "progress": "Progress",
+  "speed": "Speed",
+  "time": "Time",
+  "time_sec": "Time (s)",
+  "speed_mbs": "Speed (MB/s)",
+  "speed_chart": "Speed Chart",
+  "event_log": "Event Log"
 }

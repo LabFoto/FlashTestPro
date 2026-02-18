@@ -162,7 +162,8 @@ class WipeTab(ttk.Frame):
         self.app.data_wiper.wipe_disk(
             self.current_drive['path'],
             self.method_var.get(),
-            self.passes_var.get()
+            self.passes_var.get(),
+            self.verify_var.get()
         )
         
         self._log(self.app.i18n.get("wipe_started", f"Затирание запущено для диска {self.current_drive['path']}"))

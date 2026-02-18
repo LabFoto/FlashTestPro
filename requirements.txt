@@ -34,3 +34,4 @@ pywin32==311
 pywin32-ctypes==0.2.3
 setuptools==82.0.0
 six==1.17.0
+WMI==1.5.1

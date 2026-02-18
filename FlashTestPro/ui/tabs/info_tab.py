@@ -93,7 +93,7 @@ class InfoTab(ttk.Frame):
         # Информация о программе
         self.program_labels["name"].config(text=self.app.config.get("app", {}).get("name", "FlashTest Pro"))
         self.program_labels["version"].config(text=self.app.config.get("app", {}).get("version", "1.0.0"))
-        self.program_labels["author"].config(text="FlashTest Pro Team")
+        self.program_labels["author"].config(text="DeepSeek")
         self.program_labels["license"].config(text="MIT")
         
         # Информация о системе

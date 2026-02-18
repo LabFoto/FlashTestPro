@@ -107,24 +107,35 @@ class FormatTab(ttk.Frame):
             self.format_btn.config(state=tk.DISABLED)
         
         self._update_info()
-    
+
     def _update_info(self):
         """Обновление информационного текста"""
+        colors = self.app.theme_manager.colors
+
         self.info_text.config(state=tk.NORMAL)
         self.info_text.delete(1.0, tk.END)
-        
+
+        # Применение цветов темы
+        self.info_text.config(
+            bg=colors["entry_bg"],
+            fg=colors["entry_fg"],
+            insertbackground=colors["fg"],
+            selectbackground=colors["select_bg"],
+            selectforeground=colors["select_fg"]
+        )
+
         if self.current_drive:
             info = f"""
-{self.app.i18n.get('drive', 'Диск')}: {self.current_drive['path']}
-{self.app.i18n.get('type', 'Тип')}: {self.current_drive['type']}
-{self.app.i18n.get('filesystem', 'ФС')}: {self.current_drive['fs']}
-{self.app.i18n.get('size', 'Размер')}: {self.current_drive['total_size']}
-{self.app.i18n.get('used', 'Использовано')}: {self.current_drive['used']} ({self.current_drive['percent_used']}%)
-{self.app.i18n.get('free', 'Свободно')}: {self.current_drive['free']}
-{self.app.i18n.get('label', 'Метка')}: {self.current_drive['label'] or self.app.i18n.get('no_label', 'Нет')}
+    {self.app.i18n.get('drive', 'Диск')}: {self.current_drive['path']}
+    {self.app.i18n.get('type', 'Тип')}: {self.current_drive['type']}
+    {self.app.i18n.get('filesystem', 'ФС')}: {self.current_drive['fs']}
+    {self.app.i18n.get('size', 'Размер')}: {self.current_drive['total_size']}
+    {self.app.i18n.get('used', 'Использовано')}: {self.current_drive['used']} ({self.current_drive['percent_used']}%)
+    {self.app.i18n.get('free', 'Свободно')}: {self.current_drive['free']}
+    {self.app.i18n.get('label', 'Метка')}: {self.current_drive['label'] or self.app.i18n.get('no_label', 'Нет')}
             """
             self.info_text.insert(tk.END, info)
-        
+
         self.info_text.config(state=tk.DISABLED)
     
     def format_disk(self):

@@ -25,7 +25,13 @@
       "random"
     ],
     "bad_sector_threshold": 5,
-    "speed_chart_points": 100
+    "speed_chart_points": 100,
+    "min_chunk_size_mb": 1,
+    "max_chunk_size_mb": 256,
+    "adaptive_chunk": true,
+    "parallel_testing": false,
+    "max_threads": 4,
+    "quick_test_positions": 5
   },
   "formatting": {
     "default_filesystem": "FAT32",
