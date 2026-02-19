@@ -573,19 +573,20 @@ class TestTab(ttk.Frame):
         """Показать всплывающую подсказку"""
         x = event.widget.winfo_rootx() + 25
         y = event.widget.winfo_rooty() + 25
-        
         self.tooltip = tk.Toplevel(self)
         self.tooltip.wm_overrideredirect(True)
         self.tooltip.wm_geometry(f"+{x}+{y}")
-        
-        label = ttk.Label(
+        self.tooltip.attributes('-topmost', True)  # всегда сверху
+
+        label = tk.Label(
             self.tooltip,
             text=text,
             justify=tk.LEFT,
-            background="#ffffe0",
+            bg="#ffffe0",                      # фон явно задан
+            fg="black",                        # цвет текста
             relief=tk.SOLID,
             borderwidth=1,
-            padding=5
+            padx=5, pady=5
         )
         label.pack()
 
@@ -674,16 +675,21 @@ class TestTab(ttk.Frame):
         }
 
         # Логируем выбранные настройки
+        i = self.app.i18n
         self.log_viewer.log("=" * 50, "info")
-        self.log_viewer.log("🚀 ЗАПУСК ТЕСТА С ПАРАМЕТРАМИ:", "system")
-        self.log_viewer.log(f"📊 Режим: {'Полный' if params['mode'] == 'full' else 'Свободное место'}", "info")
-        self.log_viewer.log(f"🔄 Проходов: {params['passes']}", "info")
-        self.log_viewer.log(f"📦 Размер блока: {params['chunk_size_mb']} MB", "info")
-        self.log_viewer.log(f"🔄 Адаптивный блок: {'Да' if params['adaptive_chunk'] else 'Нет'}", "info")
-        self.log_viewer.log(f"⚡ Параллельное тестирование: {'Да' if params['parallel_testing'] else 'Нет'}", "info")
+        self.log_viewer.log(i.get("log_test_start", "🚀 ЗАПУСК ТЕСТА С ПАРАМЕТРАМИ:"), "system")
+        mode_text = i.get("mode_full" if params['mode'] == 'full' else "mode_free")
+        self.log_viewer.log(i.get("log_mode", "📊 Режим: {}").format(mode_text), "info")
+        self.log_viewer.log(i.get("log_passes", "🔄 Проходов: {}").format(params['passes']), "info")
+        self.log_viewer.log(i.get("log_chunk_size", "📦 Размер блока: {} MB").format(params['chunk_size_mb']), "info")
+        yes_no = i.get("yes") if params['adaptive_chunk'] else i.get("no")
+        self.log_viewer.log(i.get("log_adaptive", "🔄 Адаптивный блок: {}").format(yes_no), "info")
+        yes_no = i.get("yes") if params['parallel_testing'] else i.get("no")
+        self.log_viewer.log(i.get("log_parallel", "⚡ Параллельное тестирование: {}").format(yes_no), "info")
         if params['parallel_testing']:
-            self.log_viewer.log(f"🧵 Потоков: {params['num_threads']}", "info")
-        self.log_viewer.log(f"⚡ Быстрый тест: {'Да' if params['quick_test'] else 'Нет'}", "info")
+            self.log_viewer.log(i.get("log_threads", "🧵 Потоков: {}").format(params['num_threads']), "info")
+        yes_no = i.get("yes") if params['quick_test'] else i.get("no")
+        self.log_viewer.log(i.get("log_quick", "⚡ Быстрый тест: {}").format(yes_no), "info")
         self.log_viewer.log("=" * 50, "info")
 
         # Очистка предыдущих результатов
@@ -696,28 +702,29 @@ class TestTab(ttk.Frame):
 
         # Обновление состояния кнопок
         self.start_btn.config(state=tk.DISABLED)
-        self.pause_btn.config(state=tk.NORMAL, text=self.app.i18n.get("pause", "⏸ Пауза"))
+        self.pause_btn.config(state=tk.NORMAL, text=i.get("pause", "⏸ Пауза"))
         self.stop_btn.config(state=tk.NORMAL)
 
         self.log_viewer.log(
-            self.app.i18n.get("test_started", f"Тестирование запущено для диска {self.current_drive['path']}"), 
+            i.get("test_started", f"Тестирование запущено для диска {self.current_drive['path']}"), 
             "info"
         )
-        self.app.main_window.update_status(self.app.i18n.get("testing", "Тестирование..."))
+        self.app.main_window.update_status(i.get("testing", "Тестирование..."))
 
     def _confirm_test_start(self):
         """Подтверждение начала теста с расширенной информацией"""
-        mode_text = self.app.i18n.get("mode_full") if self.test_mode.get() == 'full' else self.app.i18n.get("mode_free")
+        i = self.app.i18n
+        mode_text = i.get("mode_full") if self.test_mode.get() == 'full' else i.get("mode_free")
         patterns = []
         if self.test_ones.get():
-            patterns.append(self.app.i18n.get("pattern_ones", "Единицы"))
+            patterns.append(i.get("pattern_ones", "Единицы"))
         if self.test_zeros.get():
-            patterns.append(self.app.i18n.get("pattern_zeros", "Нули"))
+            patterns.append(i.get("pattern_zeros", "Нули"))
         if self.test_random.get():
-            patterns.append(self.app.i18n.get("pattern_random", "Случайные"))
+            patterns.append(i.get("pattern_random", "Случайные"))
         patterns_str = ", ".join(patterns)
 
-        warning_text = self.app.i18n.get(
+        warning_text = i.get(
             "confirm_test",
             f"⚠️ ВНИМАНИЕ! Данные на диске {self.current_drive['path']} могут быть уничтожены!\n\n"
             f"Режим: {mode_text}\n"
@@ -733,7 +740,7 @@ class TestTab(ttk.Frame):
         )
 
         return messagebox.askyesno(
-            self.app.i18n.get("confirm", "Подтверждение"),
+            i.get("confirm", "Подтверждение"),
             warning_text,
             icon='warning'
         )
@@ -741,14 +748,15 @@ class TestTab(ttk.Frame):
     def pause_test(self):
         """Пауза/продолжение теста"""
         paused = self.app.disk_tester.pause()
+        i = self.app.i18n
 
         if paused is not None:
             if paused:
-                self.pause_btn.config(text=self.app.i18n.get("resume", "▶ Продолжить"))
-                self.log_viewer.log(self.app.i18n.get("test_paused", "Тест приостановлен"), "warning")
+                self.pause_btn.config(text=i.get("resume", "▶ Продолжить"))
+                self.log_viewer.log(i.get("test_paused", "Тест приостановлен"), "warning")
             else:
-                self.pause_btn.config(text=self.app.i18n.get("pause", "⏸ Пауза"))
-                self.log_viewer.log(self.app.i18n.get("test_resumed", "Тест продолжен"), "info")
+                self.pause_btn.config(text=i.get("pause", "⏸ Пауза"))
+                self.log_viewer.log(i.get("test_resumed", "Тест продолжен"), "info")
 
     def stop_test(self):
         """Остановка теста"""
@@ -879,45 +887,47 @@ class TestTab(ttk.Frame):
 
     def update_language(self):
         """Обновление языка интерфейса"""
+        i = self.app.i18n
+
         # Обновление заголовков
-        self.settings_frame.config(text=self.app.i18n.get("test_settings", "Настройки тестирования"))
+        self.settings_frame.config(text=i.get("test_settings", "Настройки тестирования"))
         
         # Базовые настройки
-        self.passes_label.config(text=self.app.i18n.get("passes", "Проходы:"))
-        self.mode_label.config(text=self.app.i18n.get("test_mode", "Режим:"))
-        self.mode_free_rb.config(text=self.app.i18n.get("mode_free", "Только свободное место"))
-        self.mode_full_rb.config(text=self.app.i18n.get("mode_full", "Полное тестирование (все сектора)"))
-        self.patterns_label.config(text=self.app.i18n.get("patterns", "Паттерны:"))
-        self.ones_cb.config(text=self.app.i18n.get("pattern_ones", "Единицы (0xFF)"))
-        self.zeros_cb.config(text=self.app.i18n.get("pattern_zeros", "Нули (0x00)"))
-        self.random_cb.config(text=self.app.i18n.get("pattern_random", "Случайные"))
-        self.select_all_btn.config(text=self.app.i18n.get("select_all", "Все"))
-        self.verify_cb.config(text=self.app.i18n.get("verify_read", "Проверка чтения"))
-        self.auto_format_cb.config(text=self.app.i18n.get("auto_format", "Форматировать после теста"))
+        self.passes_label.config(text=i.get("passes", "Проходы:"))
+        self.mode_label.config(text=i.get("test_mode", "Режим:"))
+        self.mode_free_rb.config(text=i.get("mode_free", "Только свободное место"))
+        self.mode_full_rb.config(text=i.get("mode_full", "Полное тестирование (все сектора)"))
+        self.patterns_label.config(text=i.get("patterns", "Паттерны:"))
+        self.ones_cb.config(text=i.get("pattern_ones", "Единицы (0xFF)"))
+        self.zeros_cb.config(text=i.get("pattern_zeros", "Нули (0x00)"))
+        self.random_cb.config(text=i.get("pattern_random", "Случайные"))
+        self.select_all_btn.config(text=i.get("select_all", "Все"))
+        self.verify_cb.config(text=i.get("verify_read", "Проверка чтения"))
+        self.auto_format_cb.config(text=i.get("auto_format", "Форматировать после теста"))
 
         # Настройки производительности
-        self.chunk_label.config(text=self.app.i18n.get("chunk_size", "Размер блока (MB):"))
+        self.chunk_label.config(text=i.get("chunk_size", "Размер блока (MB):"))
         self.adaptive_chunk_cb.config(
-            text=self.app.i18n.get("adaptive_chunk", "🔄 Адаптивный размер блока")
+            text=i.get("adaptive_chunk", "🔄 Адаптивный размер блока")
         )
         self.parallel_test_cb.config(
-            text=self.app.i18n.get("parallel_test", "⚡ Параллельное тестирование")
+            text=i.get("parallel_test", "⚡ Параллельное тестирование")
         )
-        self.threads_label.config(text=self.app.i18n.get("threads", "Потоки:"))
+        self.threads_label.config(text=i.get("threads", "Потоки:"))
         self.quick_test_cb.config(
-            text=self.app.i18n.get("quick_test", "⚡ Быстрый тест")
+            text=i.get("quick_test", "⚡ Быстрый тест")
         )
 
         # Кнопки
-        self.start_btn.config(text=self.app.i18n.get("start_test", "🚀 Начать тест"))
+        self.start_btn.config(text=i.get("start_test", "🚀 Начать тест"))
         if self.pause_btn['state'] == tk.NORMAL:
             if hasattr(self.app.disk_tester, 'paused') and self.app.disk_tester.paused:
-                self.pause_btn.config(text=self.app.i18n.get("resume", "▶ Продолжить"))
+                self.pause_btn.config(text=i.get("resume", "▶ Продолжить"))
             else:
-                self.pause_btn.config(text=self.app.i18n.get("pause", "⏸ Пауза"))
+                self.pause_btn.config(text=i.get("pause", "⏸ Пауза"))
         else:
-            self.pause_btn.config(text=self.app.i18n.get("pause", "⏸ Пауза"))
-        self.stop_btn.config(text=self.app.i18n.get("stop", "⏹ Стоп"))
+            self.pause_btn.config(text=i.get("pause", "⏸ Пауза"))
+        self.stop_btn.config(text=i.get("stop", "⏹ Стоп"))
 
         # Обновление текста в панели прогресса
         self.progress_panel.update_language()
@@ -929,9 +939,9 @@ class TestTab(ttk.Frame):
         for child in self.winfo_children():
             if isinstance(child, ttk.LabelFrame):
                 if "chart" in str(child.cget("text")).lower() or "график" in str(child.cget("text")).lower():
-                    child.config(text=self.app.i18n.get("speed_chart", "График скорости"))
+                    child.config(text=i.get("speed_chart", "График скорости"))
                 elif "log" in str(child.cget("text")).lower() or "журнал" in str(child.cget("text")).lower():
-                    child.config(text=self.app.i18n.get("event_log", "Журнал событий"))
+                    child.config(text=i.get("event_log", "Журнал событий"))
 
     def update_theme(self):
         """Обновление темы оформления"""
