@@ -86,7 +86,7 @@ class ResultsTab(ttk.Frame):
         # Ключи локализации для левых меток
         stats_keys = [
             ("drive", "drive"),
-            ("mode", "mode"),
+            ("mode", "test_mode"),
             ("total_size", "total_size"),
             ("tested", "tested"),
             ("avg_speed", "avg_speed"),

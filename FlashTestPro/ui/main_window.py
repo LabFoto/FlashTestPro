@@ -233,6 +233,7 @@ class MainWindow:
             self.format_tab.on_drive_selected(drive_info)
             self.wipe_tab.on_drive_selected(drive_info)
             self.results_tab.on_drive_selected(drive_info)
+            self.info_tab.on_drive_selected(drive_info)
 
     def get_selected_drive(self):
         """Получение информации о текущем выбранном диске"""

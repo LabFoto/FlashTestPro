@@ -202,9 +202,13 @@ class DriveListWidget(ttk.Frame):
 
         # Добавление новых дисков
         for drive in drives:
+            # Получаем переведённый тип
+            type_key = drive.get("type", "fixed")
+            type_text = self.app.i18n.get(f"drive_type_{type_key}", type_key)
+
             values = (
                 drive["path"],
-                drive["type"],
+                type_text,                     # ← здесь перевод
                 drive["total_size"],
                 drive["fs"]
             )

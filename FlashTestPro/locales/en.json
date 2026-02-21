@@ -16,6 +16,11 @@
   "filesystem": "FS",
   "status": "Status",
 
+  "drive_type_system": "System",
+  "drive_type_fixed": "Fixed",
+  "drive_type_removable": "Removable",
+  "drive_type_cdrom": "CD/DVD",
+
   "test_settings": "Test Settings",
   "performance_settings": "⚡ Performance Settings",
   "passes": "Passes:",
@@ -87,6 +92,9 @@
 
   "system_info": "System Information",
   "os": "OS:",
+  "hostname_label": "Hostname:",
+  "arch_label": "System type:",
+  "selected_drive_info": "Selected Drive Info",
   "python_version": "Python Version:",
   "admin_status": "Admin Rights:",
   "yes": "Yes",

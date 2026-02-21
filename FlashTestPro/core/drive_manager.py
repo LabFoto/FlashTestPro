@@ -73,21 +73,26 @@ class DriveManager:
     
     def _get_drive_type(self, partition) -> str:
         """Определение типа диска"""
+        # Сначала проверяем, системный ли диск
+        if self._is_system_drive(partition.mountpoint):
+            return 'system'
+
         if self.system == "Windows":
             if 'removable' in partition.opts:
-                return "Съемный"
+                return 'removable'
             elif 'cdrom' in partition.opts:
-                return "CD/DVD"
+                return 'cdrom'
             else:
-                return "Фиксированный"
+                return 'fixed'
         else:  # Linux/macOS
             mountpoint = partition.mountpoint
             if mountpoint.startswith('/media') or mountpoint.startswith('/run/media'):
-                return "Съемный"
+                return 'removable'
             elif mountpoint == '/':
-                return "Системный"
+                # Уже обработано выше, но оставим для надёжности
+                return 'system'
             else:
-                return "Фиксированный"
+                return 'fixed'
     
     def _is_system_drive(self, mountpoint: str) -> bool:
         """Проверка, является ли диск системным"""

@@ -16,6 +16,11 @@
   "filesystem": "文件系统",
   "status": "状态",
 
+  "drive_type_system": "系统",
+  "drive_type_fixed": "固定",
+  "drive_type_removable": "可移动",
+  "drive_type_cdrom": "CD/DVD",
+
   "test_settings": "测试设置",
   "performance_settings": "⚡ 性能设置",
   "passes": "次数:",
@@ -87,6 +92,9 @@
 
   "system_info": "系统信息",
   "os": "操作系统:",
+  "hostname_label": "主机名:",
+  "arch_label": "系统类型:",
+  "selected_drive_info": "所选驱动器信息",
   "python_version": "Python版本:",
   "admin_status": "管理员权限:",
   "yes": "是",

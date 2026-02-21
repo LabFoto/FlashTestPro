@@ -15,7 +15,12 @@
   "size": "Размер",
   "filesystem": "ФС",
   "status": "Статус",
-  
+
+  "drive_type_system": "Системный",
+  "drive_type_fixed": "Фиксированный",
+  "drive_type_removable": "Съёмный",
+  "drive_type_cdrom": "CD/DVD",
+
   "test_settings": "Настройки тестирования",
   "performance_settings": "⚡ Настройки производительности",
   "passes": "Проходы:",
@@ -80,6 +85,9 @@
   
   "system_info": "Системная информация",
   "os": "ОС:",
+  "hostname_label": "Имя устройства:",
+  "arch_label": "Тип системы:",
+  "selected_drive_info": "Информация о выбранном диске",
   "python_version": "Версия Python:",
   "admin_status": "Права администратора:",
   "yes": "Да",
