@@ -274,6 +274,9 @@ class MainWindow:
         self.results_tab.update_language()
         self.info_tab.update_language()
 
+        # Обновление заголовков списка дисков
+        self.drive_list.update_language()
+
         # Обновление меню
         self._create_menu()
         

@@ -221,14 +221,14 @@ class TestTab(ttk.Frame):
 
     def _create_performance_settings(self):
         """Создание расширенных настроек производительности"""
-        perf_frame = ttk.LabelFrame(
+        self.perf_frame = ttk.LabelFrame(
             self.settings_frame,
             text=self.app.i18n.get("performance_settings", "⚡ Настройки производительности")
         )
-        perf_frame.pack(fill=tk.X, padx=10, pady=5)
+        self.perf_frame.pack(fill=tk.X, padx=10, pady=5)
 
         # Размер чанка с подсказкой
-        chunk_frame = ttk.Frame(perf_frame)
+        chunk_frame = ttk.Frame(self.perf_frame)
         chunk_frame.pack(fill=tk.X, padx=10, pady=5)
 
         chunk_label_frame = ttk.Frame(chunk_frame)
@@ -281,7 +281,7 @@ class TestTab(ttk.Frame):
         self.chunk_recommendation.pack(anchor=tk.W, pady=(5, 0))
 
         # Адаптивный размер чанка
-        adaptive_frame = ttk.Frame(perf_frame)
+        adaptive_frame = ttk.Frame(self.perf_frame)
         adaptive_frame.pack(fill=tk.X, padx=10, pady=5)
 
         adaptive_check_frame = ttk.Frame(adaptive_frame)
@@ -310,7 +310,7 @@ class TestTab(ttk.Frame):
         self.adaptive_info_btn.bind("<Leave>", self._hide_tooltip)
 
         # Параллельное тестирование
-        parallel_frame = ttk.Frame(perf_frame)
+        parallel_frame = ttk.Frame(self.perf_frame)
         parallel_frame.pack(fill=tk.X, padx=10, pady=5)
 
         parallel_check_frame = ttk.Frame(parallel_frame)
@@ -366,7 +366,7 @@ class TestTab(ttk.Frame):
             self.threads_label.config(foreground='gray')
 
         # Быстрый тест
-        quick_frame = ttk.Frame(perf_frame)
+        quick_frame = ttk.Frame(self.perf_frame)
         quick_frame.pack(fill=tk.X, padx=10, pady=5)
 
         quick_check_frame = ttk.Frame(quick_frame)
@@ -431,13 +431,13 @@ class TestTab(ttk.Frame):
     def _create_chart_and_log_panel(self, parent):
         """Создание панели с графиком и журналом событий"""
         # График скорости (вверху)
-        chart_frame = ttk.LabelFrame(
+        self.chart_frame = ttk.LabelFrame(
             parent,
             text=self.app.i18n.get("speed_chart", "График скорости")
         )
-        chart_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
+        self.chart_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
 
-        self.chart_widget = SpeedChart(chart_frame, self.app)
+        self.chart_widget = SpeedChart(self.chart_frame, self.app)
         self.chart_widget.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
         # Панель прогресса (под графиком)
@@ -445,13 +445,13 @@ class TestTab(ttk.Frame):
         self.progress_panel.pack(fill=tk.X, pady=(0, 10))
 
         # Журнал событий (внизу)
-        log_frame = ttk.LabelFrame(
+        self.log_frame = ttk.LabelFrame(
             parent,
             text=self.app.i18n.get("event_log", "Журнал событий")
         )
-        log_frame.pack(fill=tk.BOTH, expand=True)
+        self.log_frame.pack(fill=tk.BOTH, expand=True)
 
-        self.log_viewer = LogViewer(log_frame, self.app)
+        self.log_viewer = LogViewer(self.log_frame, self.app)
         self.log_viewer.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     # ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
@@ -889,9 +889,12 @@ class TestTab(ttk.Frame):
         """Обновление языка интерфейса"""
         i = self.app.i18n
 
-        # Обновление заголовков
+        # Заголовки основных фреймов
         self.settings_frame.config(text=i.get("test_settings", "Настройки тестирования"))
-        
+        self.perf_frame.config(text=i.get("performance_settings", "⚡ Настройки производительности"))
+        self.chart_frame.config(text=i.get("speed_chart", "График скорости"))
+        self.log_frame.config(text=i.get("event_log", "Журнал событий"))
+
         # Базовые настройки
         self.passes_label.config(text=i.get("passes", "Проходы:"))
         self.mode_label.config(text=i.get("test_mode", "Режим:"))

@@ -18,6 +18,7 @@ class ResultsTab(ttk.Frame):
         self.app = app
         self.current_drive = None
         self.current_results = None
+        self.summary_left_labels = []  # для хранения левых меток общей статистики
 
         self.create_widgets()
 
@@ -80,27 +81,39 @@ class ResultsTab(ttk.Frame):
 
         # Создаем метки для статистики
         self.summary_labels = {}
+        self.summary_left_labels = []  # список для хранения левых меток
 
-        stats = [
-            ("drive", "Диск:"),
-            ("mode", "Режим:"),
-            ("total_size", "Общий размер:"),
-            ("tested", "Протестировано:"),
-            ("avg_speed", "Средняя скорость:"),
-            ("max_speed", "Макс. скорость:"),
-            ("min_speed", "Мин. скорость:"),
-            ("test_time", "Время теста:"),
-            ("bad_sectors", "Битые сектора:"),
-            ("passes", "Проходов выполнено:"),
-            ("status", "Статус:")
+        # Ключи локализации для левых меток
+        stats_keys = [
+            ("drive", "drive"),
+            ("mode", "mode"),
+            ("total_size", "total_size"),
+            ("tested", "tested"),
+            ("avg_speed", "avg_speed"),
+            ("max_speed", "max_speed"),
+            ("min_speed", "min_speed"),
+            ("test_time", "test_time"),
+            ("bad_sectors", "bad_sectors"),
+            ("passes", "passes"),
+            ("status", "status")
         ]
 
-        for i, (key, label) in enumerate(stats):
+        for key, loc_key in stats_keys:
             row_frame = ttk.Frame(frame)
             row_frame.pack(fill=tk.X, pady=5)
 
-            ttk.Label(row_frame, text=label, font=("Segoe UI", 10, "bold"), width=20).pack(side=tk.LEFT)
+            # Левая метка (локализованная)
+            left_text = self.app.i18n.get(loc_key, loc_key).rstrip(':') + ':'
+            left_label = ttk.Label(
+                row_frame,
+                text=left_text,
+                font=("Segoe UI", 10, "bold"),
+                width=20
+            )
+            left_label.pack(side=tk.LEFT)
+            self.summary_left_labels.append((left_label, loc_key))  # сохраняем для обновления
 
+            # Правая метка (значение)
             self.summary_labels[key] = ttk.Label(row_frame, text="---", font=("Segoe UI", 10))
             self.summary_labels[key].pack(side=tk.LEFT, padx=(10, 0))
 
@@ -376,6 +389,12 @@ class ResultsTab(ttk.Frame):
         self.bad_tree.heading("time", text=self.app.i18n.get("time", "Время"))
         self.bad_tree.heading("attempts", text=self.app.i18n.get("attempts", "Попытки"))
 
+        # Обновление левых меток в общей статистике
+        for label_widget, loc_key in self.summary_left_labels:
+            new_text = self.app.i18n.get(loc_key, loc_key).rstrip(':') + ':'
+            label_widget.config(text=new_text)
+
+        # Обновление правого значения режима, если есть результаты
         if self.current_results:
             mode = self.current_results.get('mode', 'free')
             mode_text = self.app.i18n.get("mode_full" if mode == 'full' else "mode_free", mode)

@@ -5,17 +5,17 @@
   "tab_wipe": "🧹 Wipe",
   "tab_results": "📊 Results",
   "tab_info": "ℹ️ Info",
-  
+
   "available_drives": "Available Drives",
   "refresh": "🔄 Refresh",
   "select_drive": "Select Drive",
-  
+
   "drive": "Drive",
   "type": "Type",
   "size": "Size",
   "filesystem": "FS",
   "status": "Status",
-  
+
   "test_settings": "Test Settings",
   "performance_settings": "⚡ Performance Settings",
   "passes": "Passes:",
@@ -29,32 +29,32 @@
   "select_all": "All",
   "verify_read": "Verify Read",
   "auto_format": "Format After Test",
-  
+
   "chunk_size": "Chunk Size (MB):",
   "chunk_tooltip": "Data block size per operation:\n\n• Smaller (1-16 MB) - higher accuracy, slower\n• Larger (64-256 MB) - higher speed, less error localization\n\nRecommendations:\n• For HDD: 32-64 MB\n• For SSD: 64-128 MB\n• For Flash: 16-32 MB\n\nChunk size affects:\n- Testing speed\n- Bad sector detection accuracy\n- System load",
-  
+
   "adaptive_chunk": "🔄 Adaptive Chunk Size",
   "adaptive_tooltip": "Adaptive chunk size automatically optimizes testing:\n\n• Increases chunk at high speed for faster testing\n• Decreases chunk when errors appear for accurate localization\n• Analyzes disk performance in real time\n• Optimizes speed/accuracy ratio\n\nRecommended for unknown drives",
-  
+
   "parallel_test": "⚡ Parallel Testing",
   "parallel_tooltip": "Parallel testing uses multiple threads:\n\n• Splits disk into independent zones\n• Tests zones simultaneously in different threads\n• 2-8x speedup on multi-core processors\n• Automatic load balancing\n\n⚠️ May increase system load\n✓ Recommended for SSDs and fast drives",
-  
+
   "threads": "Threads:",
-  
+
   "quick_test": "⚡ Quick Test",
   "quick_tooltip": "Quick test checks only key areas:\n\n• Beginning of disk (boot sector)\n• Middle of disk\n• End of disk\n• Several random positions\n\nAdvantages:\n• Takes 1-2 minutes\n• Identifies obvious problems\n• Safe for data\n\nLimitations:\n• Does not replace full testing\n• May miss hidden defects",
-  
+
   "start_test": "🚀 Start Test",
   "pause": "⏸ Pause",
   "resume": "▶ Resume",
   "stop": "⏹ Stop",
-  
+
   "format_settings": "Format Settings",
   "format_drive": "💾 Format Drive",
   "filesystem_label": "File System:",
   "volume_label": "Volume Label:",
   "quick_format": "Quick Format",
-  
+
   "wipe_settings": "Wipe Settings",
   "wipe_passes": "Number of Passes:",
   "wipe_method": "Wipe Method:",
@@ -63,7 +63,9 @@
   "method_gutmann": "Gutmann (35 passes)",
   "verify_wipe": "Verify After Wipe",
   "start_wipe": "🧹 Start Wiping",
-  
+
+  "log": "Log",
+
   "results": "Results",
   "test_results": "Test Results",
   "total_size": "Total Size:",
@@ -75,19 +77,27 @@
   "bad_sectors": "Bad Sectors:",
   "no_bad_sectors": "No bad sectors found",
   "export_report": "📄 Export Report",
-  
+  "export_html": "🌐 Export HTML",
+  "clear": "🗑 Clear",
+  "summary": "Summary",
+  "detailed": "Detailed Report",
+  "sector": "Sector",
+  "error_type": "Error Type",
+  "attempts": "Attempts",
+
   "system_info": "System Information",
   "os": "OS:",
   "python_version": "Python Version:",
   "admin_status": "Admin Rights:",
   "yes": "Yes",
   "no": "No",
-  
+
   "about": "About",
   "version": "Version:",
   "license": "License:",
-  "copyright": "© 2024 FlashTest Pro Team",
-  
+  "copyright": "© 2024 FlashTest Pro Team. {}",
+  "all_rights_reserved": "All rights reserved.",
+
   "menu_file": "File",
   "menu_refresh": "Refresh Drives",
   "menu_settings": "Settings",
@@ -102,13 +112,13 @@
   "menu_help": "Help",
   "menu_documentation": "Documentation",
   "menu_about": "About",
-  
+
   "warning": "Warning",
   "error": "Error",
   "success": "Success",
   "info": "Info",
   "confirm": "Confirm",
-  
+
   "select_drive_first": "Please select a drive first",
   "system_drive_warning": "⚠️ Cannot test system drives!",
   "cannot_test_system": "Cannot test system drive!",
@@ -120,14 +130,14 @@
   "test_resumed": "Test resumed",
   "stopping_test": "Stopping test...",
   "bad_sector": "Bad sector",
-  
+
   "ready": "Ready",
   "testing": "Testing...",
-  
+
   "admin_warning": "⚠️ For full disk access, it is recommended to run the program as administrator/root",
-  
+
   "about_description": "Professional tool for testing and maintaining flash drives",
-  
+
   "progress": "Progress",
   "speed": "Speed",
   "time": "Time",
@@ -145,6 +155,7 @@
   "cannot_wipe_system": "Cannot wipe system drive!",
   "confirm_stop_wipe": "Stop wiping?",
   "wipe_stopping": "Stopping wipe...",
+
   "name_label": "Name:",
   "version_label": "Version:",
   "author_label": "Author:",
@@ -169,10 +180,7 @@
   "log_error": "Error: {}",
   "author_value": "DeepSeek",
   "license_value": "MIT",
-  "copyright": "© 2024 FlashTest Pro Team. {}",
-  "all_rights_reserved": "All rights reserved.",
-  "confirm_clear": "Clear results?",
-  "export_html": "🌐 Export HTML",
+
   "program_info": "Program Information",
   "test_report_title": "FlashTest Pro Report",
   "test_report": "Test Report",
