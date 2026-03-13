@@ -258,8 +258,11 @@ class FormatTab(ttk.Frame):
 
         self._update_info()  # обновить текст с информацией о диске
 
-        def update_theme(self):
-            """Обновление темы оформления"""
-            self.chart_widget.update_theme()
-            self.progress_panel.update_theme()
-            self.log_viewer.update_theme()
+    def update_theme(self):
+        """Обновление темы оформления"""
+        colors = self.app.theme_manager.colors
+        # Обновляем цвета текстового поля
+        self.info_text.config(
+            bg=colors.get("entry_bg", "#ffffff"),
+            fg=colors.get("entry_fg", "#000000")
+        )

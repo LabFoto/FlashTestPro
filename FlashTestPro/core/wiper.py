@@ -36,6 +36,8 @@ class DataWiper:
         self.passes = 0
         self.verify = False
         self.device_handle = None
+        self.device_path = None
+        self.unmounted = False  # Флаг размонтирования
 
         # Статистика
         self.stats = {
@@ -63,7 +65,6 @@ class DataWiper:
     def _get_device_path_linux(self, mountpoint: str) -> Optional[str]:
         """Определение пути к физическому диску для Linux"""
         try:
-            # Получаем базовое устройство из /proc/mounts
             with open('/proc/mounts') as f:
                 for line in f:
                     parts = line.split()
@@ -80,7 +81,6 @@ class DataWiper:
         """Определение пути к физическому диску для macOS"""
         try:
             import subprocess
-            # diskutil info /Volumes/NAME | grep "Device Node"
             result = subprocess.run(
                 ['diskutil', 'info', mountpoint],
                 capture_output=True, text=True
@@ -88,8 +88,7 @@ class DataWiper:
             for line in result.stdout.split('\n'):
                 if 'Device Node:' in line:
                     node = line.split(':', 1)[1].strip()
-                    # Преобразуем /dev/disk2s1 -> /dev/rdisk2 для сырого доступа
-                    base = node.split('s')[0]  # отрезаем номер раздела
+                    base = node.split('s')[0]
                     raw = base.replace('/dev/disk', '/dev/rdisk')
                     return raw
         except Exception as e:
@@ -102,24 +101,50 @@ class DataWiper:
             return self._get_device_path_windows(drive_path)
         elif self.system == "Linux":
             return self._get_device_path_linux(drive_path)
-        elif self.system == "Darwin":  # macOS
+        elif self.system == "Darwin":
             return self._get_device_path_macos(drive_path)
         else:
             self.logger.error(f"Неподдерживаемая ОС: {self.system}")
             return None
 
+    def _unmount_drive(self, drive_path):
+        """Размонтирует том, чтобы освободить диск для прямого доступа (только Windows)."""
+        if self.system != "Windows":
+            return
+        try:
+            import win32file
+            import win32con
+            drive_letter = drive_path[0]
+            handle = win32file.CreateFile(
+                f"\\\\.\\{drive_letter}:",
+                win32con.GENERIC_READ | win32con.GENERIC_WRITE,
+                win32con.FILE_SHARE_READ | win32con.FILE_SHARE_WRITE,
+                None,
+                win32con.OPEN_EXISTING,
+                0,
+                None
+            )
+            if handle and handle != win32file.INVALID_HANDLE_VALUE:
+                win32file.DeviceIoControl(handle, win32con.FSCTL_DISMOUNT_VOLUME, None, None)
+                win32file.CloseHandle(handle)
+                self.logger.info(f"Том {drive_letter}: успешно размонтирован")
+                self._send_message('log', f"Том {drive_letter} размонтирован для затирания", 'info')
+                self.unmounted = True
+            else:
+                self.logger.warning(f"Не удалось открыть том {drive_letter} для размонтирования")
+        except Exception as e:
+            self.logger.warning(f"Ошибка при размонтировании тома {drive_path}: {e}")
+            self._send_message('log', f"Не удалось размонтировать том {drive_path} (возможно, уже размонтирован)", 'warning')
+
     def _get_device_size(self, device_path: str) -> int:
         """Получение размера устройства в байтах"""
         try:
             if self.system == "Windows":
-                # Для Windows используем GetDiskFreeSpaceEx на томе, но для физического диска сложнее
-                # Временно используем размер, полученный из DriveManager
                 for drive in self.app.drive_manager.get_drives_list():
                     if drive['path'] == self.drive_path:
                         return drive['total_bytes']
                 return 0
             else:
-                # Для Linux/macOS используем os.lseek
                 fd = os.open(device_path, os.O_RDONLY)
                 size = os.lseek(fd, 0, os.SEEK_END)
                 os.close(fd)
@@ -139,6 +164,17 @@ class DataWiper:
         self.passes = passes
         self.verify = verify
         self.stop_requested = False
+        self.unmounted = False
+
+        # Получаем путь к устройству в главном потоке
+        self.device_path = self._get_device_path(drive_path)
+        if not self.device_path:
+            self._send_message('error', "Не удалось определить путь к физическому устройству")
+            return False
+
+        # Размонтируем том перед затиранием
+        self._unmount_drive(drive_path)
+
         self.stats = {
             'total_bytes': 0,
             'total_size_gb': 0,
@@ -157,12 +193,10 @@ class DataWiper:
         self.running = True
 
         try:
-            # 1. Получаем путь к устройству
-            device_path = self._get_device_path(self.drive_path)
+            device_path = self.device_path
             if not device_path:
                 raise Exception("Не удалось определить путь к физическому устройству")
 
-            # 2. Получаем размер устройства
             total_bytes = self._get_device_size(device_path)
             if total_bytes == 0:
                 raise Exception("Не удалось определить размер устройства")
@@ -171,9 +205,6 @@ class DataWiper:
 
             self._send_message('log', f"Устройство: {device_path}, размер: {self.stats['total_size_gb']:.2f} GB", 'info')
 
-            # 3. Открываем устройство для записи
-            #   На Windows открываем с флагами GENERIC_READ | GENERIC_WRITE, но через os.open сложно
-            #   Используем стандартное открытие файла с os.O_RDWR | os.O_BINARY | os.O_SYNC
             flags = os.O_RDWR | os.O_BINARY if hasattr(os, 'O_BINARY') else os.O_RDWR
             if self.system != "Windows":
                 flags |= os.O_SYNC
@@ -181,10 +212,8 @@ class DataWiper:
             fd = os.open(device_path, flags)
             self.device_handle = os.fdopen(fd, 'rb+', buffering=0)
 
-            # 4. Определяем количество проходов и паттерны
             passes_to_do, patterns = self._get_patterns_for_method(self.method, self.passes)
 
-            # 5. Выполняем проходы
             for pass_num in range(1, passes_to_do + 1):
                 if self.stop_requested:
                     break
@@ -192,21 +221,16 @@ class DataWiper:
                 self.stats['current_pass'] = pass_num
                 pattern = patterns[pass_num - 1]
                 self._send_message('log', f"Проход {pass_num}/{passes_to_do} - паттерн: {pattern:02X}", 'info')
-
-                # Запись паттерна по всему диску
                 self._write_pattern(pattern)
 
-                # Если запрошена остановка, выходим
                 if self.stop_requested:
                     break
 
-            # 6. Верификация (если включена и не было остановки)
             if self.verify and not self.stop_requested and patterns:
                 self._send_message('log', "Начало верификации...", 'info')
                 last_pattern = patterns[-1]
                 self._verify_pattern(last_pattern)
 
-            # 7. Завершение
             if self.stop_requested:
                 self._send_message('log', "Затирание прервано пользователем", 'warning')
                 self._send_message('complete', "Затирание прервано")
@@ -223,6 +247,8 @@ class DataWiper:
                     self.device_handle.close()
                 except:
                     pass
+            if self.unmounted:
+                self._send_message('unmount_notice', self.drive_path)
             self.running = False
             self.device_handle = None
 
@@ -231,60 +257,32 @@ class DataWiper:
         if method == "simple":
             return 1, [0x00]
         elif method == "dod":
-            # DoD 5220.22-M: 1-й проход - любой символ, 2-й - его дополнение, 3-й - случайный
-            # Упрощённо: 0x00, 0xFF, случайный
             random_byte = random.randint(0, 255)
             return 3, [0x00, 0xFF, random_byte]
         elif method == "gutmann":
             patterns = self._get_gutmann_patterns()
             return len(patterns), patterns
         else:
-            # Пользовательский метод: просто повторяем случайные паттерны
             patterns = [random.randint(0, 255) for _ in range(passes)]
             return passes, patterns
 
     def _get_gutmann_patterns(self) -> List[int]:
         """Получение 35 паттернов Гутманна"""
         patterns = []
-
-        # Первые 4 прохода: случайные данные
         for _ in range(4):
             patterns.append(random.randint(0, 255))
-
-        # Специальные паттерны (27 проходов)
         specials = [0x55, 0xAA, 0x92, 0x49, 0x24, 0x12, 0x09, 0x04,
                     0x02, 0x01, 0x80, 0x40, 0x20, 0x10, 0x08]
-        # Повторяем, чтобы получить 27
-        for _ in range(2):
+        while len(patterns) < 31:
             patterns.extend(specials)
-        # Обрезаем до 27 (если overshoot)
-        patterns = patterns[:31]  # 4 + 27 = 31? На самом деле 4 + 27*? В классическом Gutmann 35 проходов:
-        # 4 случайных, затем 27 специальных (повторяются 3 раза?), затем 4 случайных.
-        # Для простоты реализуем стандартную последовательность:
-        # Gutmann: проходы 1-4: случайные; 5-31: специальные (повтор набора); 32-35: случайные.
-        # Итого 4 + 27 + 4 = 35.
-        # В специальных 15 паттернов, нужно повторить их 27 раз? Нет, обычно они идут по порядку,
-        # затем повторяются, всего 27 проходов = 15 + 12 (повтор первых 12). Реализуем упрощённо:
-        # Создадим список из 35 элементов.
-        # Очистим и пересоберём:
-        patterns = []
-        # 4 случайных
+        patterns = patterns[:31]
         for _ in range(4):
             patterns.append(random.randint(0, 255))
-        # 27 специальных (повторяем список specials пока не наберём 27)
-        specials = [0x55, 0xAA, 0x92, 0x49, 0x24, 0x12, 0x09, 0x04,
-                    0x02, 0x01, 0x80, 0x40, 0x20, 0x10, 0x08]
-        while len(patterns) < 31:  # 4 + 27 = 31? Подожди, 4+27=31, но нужно 35, значит потом ещё 4 = 35.
-            patterns.extend(specials)
-        patterns = patterns[:31]  # обрезаем до 31 (первые 4 + 27)
-        # Добавляем ещё 4 случайных в конец
-        for _ in range(4):
-            patterns.append(random.randint(0, 255))
-        return patterns[:35]  # гарантируем 35
+        return patterns[:35]
 
     def _write_pattern(self, pattern: int):
         """Запись одного байтового паттерна на весь диск блоками"""
-        chunk_size = 64 * 1024 * 1024  # 64 MB
+        chunk_size = 64 * 1024 * 1024
         data = bytes([pattern]) * chunk_size
         total_chunks = (self.stats['total_bytes'] + chunk_size - 1) // chunk_size
 
@@ -293,7 +291,6 @@ class DataWiper:
                 break
 
             offset = chunk_num * chunk_size
-            # Последний блок может быть меньше
             current_chunk_size = min(chunk_size, self.stats['total_bytes'] - offset)
             if current_chunk_size <= 0:
                 break
@@ -307,7 +304,6 @@ class DataWiper:
                 else:
                     os.fsync(self.device_handle.fileno())
             except OSError as e:
-                # Ошибка ввода/вывода – возможно, битый сектор
                 self.stats['bad_sectors'] += 1
                 self.stats['errors'].append({
                     'offset': offset,
@@ -315,7 +311,6 @@ class DataWiper:
                 })
                 self._send_message('log', f"Ошибка записи в секторе {offset//512}: {e}", 'error')
 
-            # Прогресс в рамках прохода
             progress = ((chunk_num + 1) / total_chunks) * 100
             self._send_message('progress', progress)
 
@@ -337,14 +332,11 @@ class DataWiper:
                 self.device_handle.seek(offset)
                 read_data = self.device_handle.read(current_chunk_size)
                 if read_data != data_expected[:current_chunk_size]:
-                    # Несовпадение данных
                     errors += 1
                     self._send_message('log', f"Ошибка верификации в секторе {offset//512}", 'error')
             except OSError as e:
                 errors += 1
                 self._send_message('log', f"Ошибка чтения в секторе {offset//512}: {e}", 'error')
-
-            # Можно отправлять прогресс верификации, но для простоты не будем
 
         if errors == 0:
             self._send_message('log', "Верификация пройдена успешно", 'success')

@@ -280,6 +280,9 @@ class WipeTab(ttk.Frame):
 
     def update_theme(self):
         """Обновление темы оформления"""
-        self.chart_widget.update_theme()
-        self.progress_panel.update_theme()
-        self.log_viewer.update_theme()
+        colors = self.app.theme_manager.colors
+        # Обновляем цвета текстового поля лога
+        self.log_text.config(
+            bg=colors.get("entry_bg", "#ffffff"),
+            fg=colors.get("entry_fg", "#000000")
+        )

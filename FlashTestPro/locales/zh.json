@@ -1,28 +1,31 @@
 {
+  "_comment_app": "Основные заголовки приложения",
   "app_title": "FlashTest Pro",
+
+  "_comment_tabs": "Названия вкладок",
   "tab_test": "🔍 测试",
   "tab_format": "💾 格式化",
   "tab_wipe": "🧹 擦除",
   "tab_results": "📊 结果",
   "tab_info": "ℹ️ 信息",
 
+  "_comment_drive_list": "Список дисков (левая панель и заголовки таблицы)",
   "available_drives": "可用驱动器",
   "refresh": "🔄 刷新",
   "select_drive": "选择驱动器",
-
   "drive": "驱动器",
   "type": "类型",
   "size": "大小",
   "filesystem": "文件系统",
   "status": "状态",
-
   "drive_type_system": "系统",
   "drive_type_fixed": "固定",
   "drive_type_removable": "可移动",
   "drive_type_cdrom": "CD/DVD",
+  "drive_type_raw": "未格式化",
 
+  "_comment_test_settings_basic": "Базовые настройки тестирования (вкладка Test)",
   "test_settings": "测试设置",
-  "performance_settings": "⚡ 性能设置",
   "passes": "次数:",
   "test_mode": "模式:",
   "mode_free": "仅可用空间",
@@ -35,31 +38,32 @@
   "verify_read": "读取验证",
   "auto_format": "测试后格式化",
 
+  "_comment_performance_settings": "Расширенные настройки производительности (вкладка Test)",
+  "performance_settings": "⚡ 性能设置",
   "chunk_size": "块大小 (MB):",
   "chunk_tooltip": "每次操作的数据块大小:\n\n• 较小 (1-16 MB) - 精度更高，速度较慢\n• 较大 (64-256 MB) - 速度更快，错误定位精度较低\n\n建议:\n• 对于 HDD: 32-64 MB\n• 对于 SSD: 64-128 MB\n• 对于 闪存: 16-32 MB\n\n块大小影响:\n- 测试速度\n- 坏扇区检测精度\n- 系统负载",
-
   "adaptive_chunk": "🔄 自适应块大小",
   "adaptive_tooltip": "自适应块大小自动优化测试:\n\n• 高速时自动增大块大小以加速\n• 出现错误时减小块大小以精确定位\n• 实时分析磁盘性能\n• 优化速度/精度比\n\n建议用于未知驱动器",
-
   "parallel_test": "⚡ 并行测试",
   "parallel_tooltip": "并行测试使用多个线程:\n\n• 将磁盘分成独立区域\n• 在不同线程中同时测试区域\n• 在多核处理器上提速 2-8 倍\n• 自动负载平衡\n\n⚠️ 可能增加系统负载\n✓ 建议用于 SSD 和快速驱动器",
-
   "threads": "线程数:",
-
   "quick_test": "⚡ 快速测试",
   "quick_tooltip": "快速测试仅检查关键区域:\n\n• 磁盘开始（引导扇区）\n• 磁盘中间\n• 磁盘结尾\n• 多个随机位置\n\n优点:\n• 只需1-2分钟\n• 识别明显问题\n• 数据安全\n\n限制:\n• 不能替代完整测试\n• 可能错过隐藏缺陷",
 
+  "_comment_test_controls": "Кнопки управления тестированием",
   "start_test": "🚀 开始测试",
   "pause": "⏸ 暂停",
   "resume": "▶ 继续",
   "stop": "⏹ 停止",
 
+  "_comment_format_settings": "Настройки форматирования (вкладка Format)",
   "format_settings": "格式化设置",
   "format_drive": "💾 格式化驱动器",
   "filesystem_label": "文件系统:",
   "volume_label": "卷标:",
   "quick_format": "快速格式化",
 
+  "_comment_wipe_settings": "Настройки затирания (вкладка Wipe)",
   "wipe_settings": "擦除设置",
   "wipe_passes": "擦除次数:",
   "wipe_method": "擦除方法:",
@@ -69,8 +73,10 @@
   "verify_wipe": "擦除后验证",
   "start_wipe": "🧹 开始擦除",
 
+  "_comment_log": "Лог событий",
   "log": "日志",
 
+  "_comment_results": "Результаты тестирования (вкладка Results)",
   "results": "结果",
   "test_results": "测试结果",
   "total_size": "总大小:",
@@ -90,6 +96,7 @@
   "error_type": "错误类型",
   "attempts": "尝试次数",
 
+  "_comment_system_info": "Информация о системе (вкладка Info и статусная строка)",
   "system_info": "系统信息",
   "os": "操作系统:",
   "hostname_label": "主机名:",
@@ -100,12 +107,15 @@
   "yes": "是",
   "no": "否",
 
+  "_comment_about": "О программе",
   "about": "关于",
   "version": "版本:",
   "license": "许可证:",
   "copyright": "© 2024 FlashTest Pro 团队。{}",
   "all_rights_reserved": "版权所有。",
+  "about_description": "专业的闪存驱动器测试和维护工具",
 
+  "_comment_menu": "Главное меню",
   "menu_file": "文件",
   "menu_refresh": "刷新驱动器",
   "menu_settings": "设置",
@@ -113,6 +123,7 @@
   "menu_view": "视图",
   "menu_theme": "主题",
   "menu_language": "语言",
+  "menu_show_all": "显示所有设备",
   "menu_tools": "工具",
   "menu_check_health": "健康检查",
   "menu_benchmark": "基准测试",
@@ -121,12 +132,14 @@
   "menu_documentation": "文档",
   "menu_about": "关于",
 
+  "_comment_dialogs": "Заголовки диалоговых окон",
   "warning": "警告",
   "error": "错误",
   "success": "成功",
   "info": "信息",
   "confirm": "确认",
 
+  "_comment_messages": "Сообщения и предупреждения",
   "select_drive_first": "请先选择驱动器",
   "system_drive_warning": "⚠️ 不能测试系统驱动器！",
   "cannot_test_system": "不能测试系统驱动器！",
@@ -138,24 +151,9 @@
   "test_resumed": "测试已继续",
   "stopping_test": "正在停止测试...",
   "bad_sector": "坏扇区",
-
   "ready": "就绪",
   "testing": "测试中...",
-
   "admin_warning": "⚠️ 建议以管理员/root身份运行程序以获得完整的磁盘访问权限",
-
-  "about_description": "专业的闪存驱动器测试和维护工具",
-
-  "progress": "进度",
-  "speed": "速度",
-  "time": "时间",
-  "time_sec": "时间 (秒)",
-  "speed_mbs": "速度 (MB/秒)",
-  "speed_chart": "速度图表",
-  "event_log": "事件日志",
-
-  "properties": "属性",
-  "no_label": "无",
   "confirm_format": "驱动器 {0} 上的所有数据将被删除！\n\n继续？",
   "cannot_format_system": "不能格式化系统驱动器！",
   "wipe_started": "开始擦除驱动器 {0}",
@@ -163,7 +161,11 @@
   "cannot_wipe_system": "不能擦除系统驱动器！",
   "confirm_stop_wipe": "停止擦除？",
   "wipe_stopping": "正在停止擦除...",
+  "confirm_clear": "清除结果？",
 
+  "_comment_properties": "Свойства диска (контекстное меню)",
+  "properties": "属性",
+  "no_label": "无",
   "name_label": "名称:",
   "version_label": "版本:",
   "author_label": "作者:",
@@ -176,6 +178,7 @@
   "admin_label": "管理员:",
   "unknown": "未知",
 
+  "_comment_log_messages": "Строки для логов",
   "log_test_start": "🚀 开始测试，参数如下：",
   "log_mode": "📊 模式：{}",
   "log_passes": "🔄 测试轮次：{}",
@@ -189,11 +192,25 @@
   "author_value": "DeepSeek",
   "license_value": "MIT",
 
+  "_comment_report": "Отчёт (HTML экспорт)",
   "program_info": "程序信息",
   "test_report_title": "FlashTest Pro 报告",
   "test_report": "测试报告",
   "generated": "生成于",
   "used": "已用",
   "free": "可用",
-  "label": "卷标"
+  "label": "卷标",
+
+  "_comment_chart": "График скорости",
+  "progress": "进度",
+  "speed": "速度",
+  "time": "时间",
+  "time_sec": "时间 (秒)",
+  "speed_mbs": "速度 (MB/秒)",
+  "speed_chart": "速度图表",
+  "event_log": "事件日志",
+
+  "_comment_unmount": "磁盘卸载通知",
+  "unmount_notice_title": "注意",
+  "unmount_notice_message": "磁盘 {0} 已卸载以进行直接访问。\n测试完成后，请重新连接磁盘或格式化它以再次使用。"
 }

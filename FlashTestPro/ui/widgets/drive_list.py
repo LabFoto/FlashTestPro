@@ -29,10 +29,11 @@ class DriveListWidget(ttk.Frame):
         # Настройка колонок
         self._set_column_headings()
 
+        # Уменьшаем ширину колонок для лучшего вписывания
         self.tree.column("drive", width=100)
-        self.tree.column("type", width=100)
-        self.tree.column("size", width=80)
-        self.tree.column("fs", width=70)
+        self.tree.column("type", width=80)    # было 100
+        self.tree.column("size", width=70)    # было 80
+        self.tree.column("fs", width=60)      # было 70
 
         # Скроллбар
         scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)

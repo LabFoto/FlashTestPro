@@ -13,7 +13,8 @@
     "window_height": 700,
     "min_width": 800,
     "min_height": 600,
-    "show_tooltips": true
+    "show_tooltips": true,
+    "show_all_devices": false
   },
   "testing": {
     "default_passes": 1,

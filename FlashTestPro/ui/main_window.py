@@ -95,6 +95,16 @@ class MainWindow:
             command=lambda: self.app.change_language("zh")
         )
 
+        # ----- Новый пункт: "Отображать всё" -----
+        self.show_all_var = tk.BooleanVar(
+            value=self.app.config['ui'].get('show_all_devices', False)
+        )
+        view_menu.add_checkbutton(
+            label=self.app.i18n.get("menu_show_all", "Отображать всё"),
+            variable=self.show_all_var,
+            command=self._toggle_show_all
+        )
+
         # ----- Меню "Инструменты" -----
         tools_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label=self.app.i18n.get("menu_tools", "Инструменты"), menu=tools_menu)
@@ -129,6 +139,12 @@ class MainWindow:
 
         # Привязка горячих клавиш
         self.root.bind("<F5>", lambda e: self.app.refresh_drives())
+
+    def _toggle_show_all(self):
+        """Обработчик переключения галочки"""
+        self.app.toggle_show_all_devices()
+        # Синхронизируем переменную с конфигом (на случай, если вызов пришёл откуда-то ещё)
+        self.show_all_var.set(self.app.config['ui'].get('show_all_devices', False))
 
     def _create_main_layout(self):
         """Создание основной структуры окна"""
@@ -280,11 +296,11 @@ class MainWindow:
 
         # Обновление меню
         self._create_menu()
-        
+
         # Обновление заголовка списка дисков
         if hasattr(self, 'drives_label'):
             self.drives_label.config(text=self.app.i18n.get("available_drives", "Доступные диски"))
-        
+
         # Обновление кнопки обновления
         if hasattr(self, 'refresh_btn'):
             self.refresh_btn.config(text=self.app.i18n.get("refresh", "🔄 Обновить"))
@@ -300,7 +316,7 @@ class MainWindow:
         self.wipe_tab.update_theme()
         self.results_tab.update_theme()
         self.info_tab.update_theme()
-        
+
         # Обновление списка дисков
         self.drive_list.update_theme()
 
@@ -342,7 +358,7 @@ class MainWindow:
         error_window.minsize(600, 400)
 
         text_area = scrolledtext.ScrolledText(
-            error_window, 
+            error_window,
             wrap=tk.WORD,
             font=self.app.theme_manager.fixed_font
         )

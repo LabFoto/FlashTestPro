@@ -1,28 +1,31 @@
 {
+  "_comment_app": "Основные заголовки приложения",
   "app_title": "FlashTest Pro",
+
+  "_comment_tabs": "Названия вкладок",
   "tab_test": "🔍 Testing",
   "tab_format": "💾 Format",
   "tab_wipe": "🧹 Wipe",
   "tab_results": "📊 Results",
   "tab_info": "ℹ️ Info",
 
+  "_comment_drive_list": "Список дисков (левая панель и заголовки таблицы)",
   "available_drives": "Available Drives",
   "refresh": "🔄 Refresh",
   "select_drive": "Select Drive",
-
   "drive": "Drive",
   "type": "Type",
   "size": "Size",
   "filesystem": "FS",
   "status": "Status",
-
   "drive_type_system": "System",
   "drive_type_fixed": "Fixed",
   "drive_type_removable": "Removable",
   "drive_type_cdrom": "CD/DVD",
+  "drive_type_raw": "Unformatted",
 
+  "_comment_test_settings_basic": "Базовые настройки тестирования (вкладка Test)",
   "test_settings": "Test Settings",
-  "performance_settings": "⚡ Performance Settings",
   "passes": "Passes:",
   "test_mode": "Mode:",
   "mode_free": "Free Space Only",
@@ -35,31 +38,32 @@
   "verify_read": "Verify Read",
   "auto_format": "Format After Test",
 
+  "_comment_performance_settings": "Расширенные настройки производительности (вкладка Test)",
+  "performance_settings": "⚡ Performance Settings",
   "chunk_size": "Chunk Size (MB):",
   "chunk_tooltip": "Data block size per operation:\n\n• Smaller (1-16 MB) - higher accuracy, slower\n• Larger (64-256 MB) - higher speed, less error localization\n\nRecommendations:\n• For HDD: 32-64 MB\n• For SSD: 64-128 MB\n• For Flash: 16-32 MB\n\nChunk size affects:\n- Testing speed\n- Bad sector detection accuracy\n- System load",
-
   "adaptive_chunk": "🔄 Adaptive Chunk Size",
   "adaptive_tooltip": "Adaptive chunk size automatically optimizes testing:\n\n• Increases chunk at high speed for faster testing\n• Decreases chunk when errors appear for accurate localization\n• Analyzes disk performance in real time\n• Optimizes speed/accuracy ratio\n\nRecommended for unknown drives",
-
   "parallel_test": "⚡ Parallel Testing",
   "parallel_tooltip": "Parallel testing uses multiple threads:\n\n• Splits disk into independent zones\n• Tests zones simultaneously in different threads\n• 2-8x speedup on multi-core processors\n• Automatic load balancing\n\n⚠️ May increase system load\n✓ Recommended for SSDs and fast drives",
-
   "threads": "Threads:",
-
   "quick_test": "⚡ Quick Test",
   "quick_tooltip": "Quick test checks only key areas:\n\n• Beginning of disk (boot sector)\n• Middle of disk\n• End of disk\n• Several random positions\n\nAdvantages:\n• Takes 1-2 minutes\n• Identifies obvious problems\n• Safe for data\n\nLimitations:\n• Does not replace full testing\n• May miss hidden defects",
 
+  "_comment_test_controls": "Кнопки управления тестированием",
   "start_test": "🚀 Start Test",
   "pause": "⏸ Pause",
   "resume": "▶ Resume",
   "stop": "⏹ Stop",
 
+  "_comment_format_settings": "Настройки форматирования (вкладка Format)",
   "format_settings": "Format Settings",
   "format_drive": "💾 Format Drive",
   "filesystem_label": "File System:",
   "volume_label": "Volume Label:",
   "quick_format": "Quick Format",
 
+  "_comment_wipe_settings": "Настройки затирания (вкладка Wipe)",
   "wipe_settings": "Wipe Settings",
   "wipe_passes": "Number of Passes:",
   "wipe_method": "Wipe Method:",
@@ -69,8 +73,10 @@
   "verify_wipe": "Verify After Wipe",
   "start_wipe": "🧹 Start Wiping",
 
+  "_comment_log": "Лог событий",
   "log": "Log",
 
+  "_comment_results": "Результаты тестирования (вкладка Results)",
   "results": "Results",
   "test_results": "Test Results",
   "total_size": "Total Size:",
@@ -90,6 +96,7 @@
   "error_type": "Error Type",
   "attempts": "Attempts",
 
+  "_comment_system_info": "Информация о системе (вкладка Info и статусная строка)",
   "system_info": "System Information",
   "os": "OS:",
   "hostname_label": "Hostname:",
@@ -100,12 +107,15 @@
   "yes": "Yes",
   "no": "No",
 
+  "_comment_about": "О программе",
   "about": "About",
   "version": "Version:",
   "license": "License:",
   "copyright": "© 2024 FlashTest Pro Team. {}",
   "all_rights_reserved": "All rights reserved.",
+  "about_description": "Professional tool for testing and maintaining flash drives",
 
+  "_comment_menu": "Главное меню",
   "menu_file": "File",
   "menu_refresh": "Refresh Drives",
   "menu_settings": "Settings",
@@ -113,6 +123,7 @@
   "menu_view": "View",
   "menu_theme": "Theme",
   "menu_language": "Language",
+  "menu_show_all": "Show all devices",
   "menu_tools": "Tools",
   "menu_check_health": "Health Check",
   "menu_benchmark": "Benchmark",
@@ -121,12 +132,14 @@
   "menu_documentation": "Documentation",
   "menu_about": "About",
 
+  "_comment_dialogs": "Заголовки диалоговых окон",
   "warning": "Warning",
   "error": "Error",
   "success": "Success",
   "info": "Info",
   "confirm": "Confirm",
 
+  "_comment_messages": "Сообщения и предупреждения",
   "select_drive_first": "Please select a drive first",
   "system_drive_warning": "⚠️ Cannot test system drives!",
   "cannot_test_system": "Cannot test system drive!",
@@ -138,24 +151,9 @@
   "test_resumed": "Test resumed",
   "stopping_test": "Stopping test...",
   "bad_sector": "Bad sector",
-
   "ready": "Ready",
   "testing": "Testing...",
-
   "admin_warning": "⚠️ For full disk access, it is recommended to run the program as administrator/root",
-
-  "about_description": "Professional tool for testing and maintaining flash drives",
-
-  "progress": "Progress",
-  "speed": "Speed",
-  "time": "Time",
-  "time_sec": "Time (s)",
-  "speed_mbs": "Speed (MB/s)",
-  "speed_chart": "Speed Chart",
-  "event_log": "Event Log",
-
-  "properties": "Properties",
-  "no_label": "None",
   "confirm_format": "All data on drive {0} will be deleted!\n\nContinue?",
   "cannot_format_system": "Cannot format system drive!",
   "wipe_started": "Wiping started for drive {0}",
@@ -163,7 +161,11 @@
   "cannot_wipe_system": "Cannot wipe system drive!",
   "confirm_stop_wipe": "Stop wiping?",
   "wipe_stopping": "Stopping wipe...",
+  "confirm_clear": "Clear results?",
 
+  "_comment_properties": "Свойства диска (контекстное меню)",
+  "properties": "Properties",
+  "no_label": "None",
   "name_label": "Name:",
   "version_label": "Version:",
   "author_label": "Author:",
@@ -176,6 +178,7 @@
   "admin_label": "Admin:",
   "unknown": "Unknown",
 
+  "_comment_log_messages": "Строки для логов",
   "log_test_start": "🚀 STARTING TEST WITH PARAMETERS:",
   "log_mode": "📊 Mode: {}",
   "log_passes": "🔄 Passes: {}",
@@ -189,11 +192,25 @@
   "author_value": "DeepSeek",
   "license_value": "MIT",
 
+  "_comment_report": "Отчёт (HTML экспорт)",
   "program_info": "Program Information",
   "test_report_title": "FlashTest Pro Report",
   "test_report": "Test Report",
   "generated": "Generated",
   "used": "Used",
   "free": "Free",
-  "label": "Label"
+  "label": "Label",
+
+  "_comment_chart": "График скорости",
+  "progress": "Progress",
+  "speed": "Speed",
+  "time": "Time",
+  "time_sec": "Time (s)",
+  "speed_mbs": "Speed (MB/s)",
+  "speed_chart": "Speed Chart",
+  "event_log": "Event Log",
+
+  "_comment_unmount": "Disk unmount notification",
+  "unmount_notice_title": "Attention",
+  "unmount_notice_message": "Disk {0} was unmounted for direct access.\nAfter the test, please reconnect the disk or format it to use it again."
 }
