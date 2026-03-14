@@ -212,5 +212,11 @@
 
   "_comment_unmount": "磁盘卸载通知",
   "unmount_notice_title": "注意",
-  "unmount_notice_message": "磁盘 {0} 已卸载以进行直接访问。\n测试完成后，请重新连接磁盘或格式化它以再次使用。"
+  "unmount_notice_message": "磁盘 {0} 已卸载以进行直接访问。\n测试完成后，请重新连接磁盘或格式化它以再次使用。",
+
+  "_comment_capacity": "容量检测说明",
+  "tab_capacity": "📏 容量检测",
+  "start_capacity_test": "📏 检测容量",
+  "confirm_capacity_test": "磁盘上的所有数据将被销毁！\n继续？",
+  "capacity_test_started": "开始检测容量..."
 }

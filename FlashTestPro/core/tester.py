@@ -13,6 +13,7 @@ import platform
 from datetime import datetime
 from typing import Dict, Optional, List, Tuple
 from utils.logger import get_logger
+import win32file
 
 if platform.system() == "Windows":
     import wmi
@@ -131,7 +132,9 @@ class DiskTester:
             )
             if handle and handle != win32file.INVALID_HANDLE_VALUE:
                 # Пытаемся размонтировать
-                win32file.DeviceIoControl(handle, win32con.FSCTL_DISMOUNT_VOLUME, None, None)
+                # Если константа не определена, используем числовое значение
+                FSCTL_DISMOUNT_VOLUME = getattr(win32file, 'FSCTL_DISMOUNT_VOLUME', 0x00090020)
+                win32file.DeviceIoControl(handle, FSCTL_DISMOUNT_VOLUME, None, None)
                 win32file.CloseHandle(handle)
                 self.logger.info(f"Том {drive_letter}: успешно размонтирован")
                 self._send_message('log', f"Том {drive_letter} размонтирован для прямого доступа к диску", 'info')
@@ -211,6 +214,7 @@ class DiskTester:
         """Рабочий поток тестирования"""
         self.stats['start_time'] = time.time()
         self.last_update_time = time.time()
+        self.test_handle = None
 
         try:
             if self.stats['mode'] == 'full':
@@ -262,7 +266,7 @@ class DiskTester:
             self.logger.error(f"Ошибка в потоке тестирования: {e}", exc_info=True)
             self._send_message('error', str(e))
         finally:
-            if self.device_handle:
+            if self.test_handle:
                 try:
                     self.device_handle.close()
                 except:

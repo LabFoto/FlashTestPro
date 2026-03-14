@@ -11,6 +11,7 @@ import queue
 import platform
 from typing import Dict, List, Optional, Tuple
 from utils.logger import get_logger
+import win32file
 
 # Для работы с WMI на Windows
 if platform.system() == "Windows":
@@ -125,7 +126,9 @@ class DataWiper:
                 None
             )
             if handle and handle != win32file.INVALID_HANDLE_VALUE:
-                win32file.DeviceIoControl(handle, win32con.FSCTL_DISMOUNT_VOLUME, None, None)
+                # Если константа не определена, используем числовое значение
+                FSCTL_DISMOUNT_VOLUME = getattr(win32file, 'FSCTL_DISMOUNT_VOLUME', 0x00090020)
+                win32file.DeviceIoControl(handle, FSCTL_DISMOUNT_VOLUME, None, None)
                 win32file.CloseHandle(handle)
                 self.logger.info(f"Том {drive_letter}: успешно размонтирован")
                 self._send_message('log', f"Том {drive_letter} размонтирован для затирания", 'info')

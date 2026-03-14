@@ -17,6 +17,7 @@ from utils.config import ConfigManager
 from utils.logger import get_logger
 from utils.i18n import I18n
 from ui.themes import ThemeManager
+from core.capacity import CapacityTester
 
 class FlashTestProApp:
     """Основной класс приложения"""
@@ -67,8 +68,10 @@ class FlashTestProApp:
 
         # Инициализация остальных менеджеров
         self.disk_tester = DiskTester(self)
+        self.capacity_tester = CapacityTester(self)
         self.disk_formatter = DiskFormatter(self)
         self.data_wiper = DataWiper(self)
+        self.capacity_tester = CapacityTester(self)
 
         # Создание главного окна интерфейса
         self.main_window = MainWindow(self)

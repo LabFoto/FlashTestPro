@@ -212,5 +212,11 @@
 
   "_comment_unmount": "Disk unmount notification",
   "unmount_notice_title": "Attention",
-  "unmount_notice_message": "Disk {0} was unmounted for direct access.\nAfter the test, please reconnect the disk or format it to use it again."
+  "unmount_notice_message": "Disk {0} was unmounted for direct access.\nAfter the test, please reconnect the disk or format it to use it again.",
+
+  "_comment_capacity": "Checking the capacity",
+  "tab_capacity": "📏 Capacity",
+  "start_capacity_test": "📏 Check Capacity",
+  "confirm_capacity_test": "All data on the drive will be destroyed!\nContinue?",
+  "capacity_test_started": "Starting capacity check..."
 }

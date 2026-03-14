@@ -11,6 +11,7 @@ from ui.tabs.format_tab import FormatTab
 from ui.tabs.wipe_tab import WipeTab
 from ui.tabs.results_tab import ResultsTab
 from ui.tabs.info_tab import InfoTab
+from ui.tabs.capacity_tab import CapacityTab
 from ui.widgets.drive_list import DriveListWidget
 from utils.logger import get_logger
 
@@ -189,6 +190,9 @@ class MainWindow:
         self.test_tab = TestTab(self.notebook, self.app)
         self.notebook.add(self.test_tab, text=self.app.i18n.get("tab_test", "🔍 Тестирование"))
 
+        self.capacity_tab = CapacityTab(self.notebook, self.app)
+        self.notebook.add(self.capacity_tab, text=self.app.i18n.get("tab_capacity", "📏 Ёмкость"))
+
         self.format_tab = FormatTab(self.notebook, self.app)
         self.notebook.add(self.format_tab, text=self.app.i18n.get("tab_format", "💾 Форматирование"))
 
@@ -200,6 +204,7 @@ class MainWindow:
 
         self.info_tab = InfoTab(self.notebook, self.app)
         self.notebook.add(self.info_tab, text=self.app.i18n.get("tab_info", "ℹ️ Информация"))
+
 
     def _create_status_bar(self):
         """Создание строки состояния внизу окна"""
@@ -246,6 +251,7 @@ class MainWindow:
 
             # Уведомляем все вкладки о выборе диска
             self.test_tab.on_drive_selected(drive_info)
+            self.capacity_tab.on_drive_selected(drive_info)
             self.format_tab.on_drive_selected(drive_info)
             self.wipe_tab.on_drive_selected(drive_info)
             self.results_tab.on_drive_selected(drive_info)
